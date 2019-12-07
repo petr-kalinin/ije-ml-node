@@ -11,6 +11,8 @@ import db from './mongo/mongo'
 import download from './lib/download'
 import sleep from './lib/sleep'
 
+import api from './api/setupApi'
+
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
     logger.error r
@@ -31,6 +33,8 @@ app.use(compression())
 app.use(express.static('build/assets'))
 
 app.use(express.static('public'))
+
+app.use '/api', api
 
 app.get '/status', (req, res) ->
     logger.info "Query string", req.query
