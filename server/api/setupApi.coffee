@@ -1,6 +1,7 @@
 express = require('express')
 
 import acmConfig, {contestConfig} from '../data/acmConfig'
+import monitor from '../data/monitor'
 import ijeConfig from '../data/ijeConfig'
 
 api = express.Router()
@@ -23,6 +24,10 @@ api.get '/ijeConfig', wrap (req, res) ->
 
 api.get '/contestConfig/:id', wrap (req, res) ->
     res.json(await contestConfig(+req.params.id))
+
+api.get '/monitor/:id', wrap (req, res) ->
+    console.log "id=", req.params.id
+    res.json(await monitor(+req.params.id))
 
 
 export default api
