@@ -11,7 +11,7 @@ load = () ->
     data = await parseXmlFile(filename)
     for key, value of data
         if typeof value == 'string'
-            data[key] = data[key].replace("\\", "/")
+            data[key] = data[key].replace(/\\/g, "/")
     return data
 
 _ijeConfig = new LoadableConfig(load)

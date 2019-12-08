@@ -26,8 +26,14 @@ api.get '/contestConfig/:id', wrap (req, res) ->
     res.json(await contestConfig(+req.params.id))
 
 api.get '/monitor/:id', wrap (req, res) ->
-    console.log "id=", req.params.id
     res.json(await monitor(+req.params.id))
+
+api.get '/session', wrap (req, res) ->
+    if not req.session?.i
+        req.session.i = 0
+    req.session.i++
+    res.status(200).send("" + req.session.i)
+
 
 
 export default api

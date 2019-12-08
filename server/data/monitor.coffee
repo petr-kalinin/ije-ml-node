@@ -21,5 +21,4 @@ export default monitor = (id) ->
         throw "Wrong contest id #{id}"
     if not monitors
         monitors = ((await makeMonitor(i)) for _, i in ac["acm-contest"])
-    console.log monitors, id
     await monitors[id].get()

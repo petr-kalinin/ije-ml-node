@@ -4,6 +4,8 @@ import csshook from 'css-modules-require-hook/preset'
 
 express = require('express')
 compression = require('compression')
+session = require('express-session')
+MongoStore = require('connect-mongo')(session)
 
 import logger from './log'
 import renderOnServer from './ssr/renderOnServer'
@@ -34,6 +36,14 @@ app.use(express.static('build/assets'))
 
 app.use(express.static('public'))
 
+app.use session
+    cookie:
+        maxAge: 10 * 60 * 60 * 1000
+    secret: 'foo',
+    store: new MongoStore({ url: 'mongodb://localhost/session' })
+    resave: false
+    saveUninitialized: false
+    
 app.use '/api', api
 
 app.get '/status', (req, res) ->
