@@ -1,5 +1,6 @@
 xml2js = require('xml2js')
 fs = require('fs')
+iconv = require('iconv-lite')
 
 import logger from '../log'
 
@@ -21,12 +22,25 @@ fixNesting = (data) ->
         delete data['$']
     for key, value of data
         if Array.isArray(value)
+            newArray = []
+            wasId = false
             for el in value
                 el = fixNesting(el)
-                id = el.id or key
-                if id of newData
-                    throw "Can not parse, duplicate id #{id} in key #{key}"
-                newData[id] = el
+                id = el.id
+                if id
+                    if id of newData
+                        throw "Can not parse, duplicate id #{id} in key #{key}"
+                    newData[id] = el
+                    wasId = true
+                else if value.length == 1
+                    newData[key] = el
+                    wasId = true
+                else
+                    newArray.push(el)
+            if newArray.length and wasId
+                throw "Found both id and non-id in key #{key}"
+            if not wasId
+                newData[key] = newArray
         else
             newData[key] = fixNesting(value)
     return newData
@@ -49,6 +63,7 @@ export loadFile = (filename) ->
             if err
                 reject err
             else
+                data = iconv.decode(data, "windows-1251")
                 resolve data
 
 export default parseXmlFile = (filename) ->
