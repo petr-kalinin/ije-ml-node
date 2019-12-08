@@ -34,6 +34,20 @@ api.get '/session', wrap (req, res) ->
     req.session.i++
     res.status(200).send("" + req.session.i)
 
+api.post '/setContest', wrap (req, res) ->
+    if not req.body?.id?
+        res.status(400).send("No id")
+        return
+    id = +req.body?.id
+    try
+        config = await contestConfig(id)
+    catch
+        res.status(400).send("Unknown id")
+        return
+    req.session.contest = id
+    res.status(200).json({set: "ok"})
 
+api.get '/contest', wrap (req, res) ->
+    res.status(200).send("" + req.session.contest)
 
 export default api
