@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 
 import Index from './components/Index'
+import Login from './components/Login'
 
 class NoMatch extends React.Component
     render: () ->
@@ -17,6 +18,12 @@ export default [
         component: Index,
         key: "/"
         path: "/"
+        exact: true
+    },
+    {
+        component: Login,
+        key: "/login"
+        path: "/login"
         exact: true
     },
     {

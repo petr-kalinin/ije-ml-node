@@ -51,6 +51,13 @@ api.post '/setContest', wrap (req, res) ->
 api.get '/contest', wrap (req, res) ->
     res.status(200).send("" + req.session.contest)
 
+api.get '/contests', wrap (req, res) ->
+    result = {}
+    ac = await acmConfig()
+    for _, i in ac["acm-contest"]
+        result[i] = (await contestConfig(i)).title
+    res.json(result)
+
 api.get '/contestData', wrap (req, res) ->
     cc = await contestConfig(req.session.contest)
     m = await monitor(req.session.contest)
