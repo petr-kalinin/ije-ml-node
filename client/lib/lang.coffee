@@ -5,7 +5,7 @@ export default LANG =
 
     NoContestsRunning: "Контестов нет"
     StatusUnknown: "Состояние неизвестно"
-    TimeOfTime: "%d из %d"
+    TimeOfTime: (a, b) -> "#{a} из #{b}"
     NotLoggedIn: "Вы не вошли"
     LogIn: "Войти"
     ChangeContest: "Сменить контест"

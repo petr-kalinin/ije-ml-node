@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 
 import LANG from '../lib/lang'
 
+import ConnectedComponent from '../lib/ConnectedComponent'
+
 TopTable = (props) ->
         <table width="100%" className="top"><tbody>
             <tr>
@@ -11,13 +13,20 @@ TopTable = (props) ->
                     IJE: the Integrated Judging Environment
                 </td>
                 <td align="center" width="34%">
-                    <font size="+1"><b>{props.name}</b></font>
+                    <font size="+1"><b>{props.contestData.title}</b></font>
                 </td>
                 <td width="33%" align="right">
-                    <b>{props.status}</b>
+                    <b>{props.contestData.status}, {LANG.TimeOfTime(props.contestData.time, props.contestData.length)}</b>
                 </td>
             </tr>
         </tbody></table>
+
+topTableOptions = 
+    urls: (props) ->
+        contestData: "contestData"
+    timeout: 10000
+
+TopTable = ConnectedComponent(TopTable, topTableOptions)
 
 HrefsTable = (props) ->
     w = Math.floor(100/(props.hrefs.length+3));
@@ -49,8 +58,6 @@ HrefsTable = (props) ->
 export default Sceleton = (Component) ->
     (props) ->
         # TODO
-        contest_name = "name"
-        status = "Status"
         has_contest = true
         curpage = "/"
         login = "QWE"
@@ -62,7 +69,7 @@ export default Sceleton = (Component) ->
              {text: "Messages", href: "/messages", active: login?}
         ]
         <div>
-            <TopTable name={contest_name} status={status}/>
+            <TopTable/>
             <HrefsTable hrefs={hrefs} curpage={curpage} has_contest={has_contest} login={login} team_name={team_name}/>
             <table width="100%" className="main"><tbody><tr><td>
                 <Component/>

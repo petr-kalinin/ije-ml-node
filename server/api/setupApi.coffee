@@ -3,6 +3,7 @@ express = require('express')
 import acmConfig, {contestConfig} from '../data/acmConfig'
 import monitor from '../data/monitor'
 import ijeConfig from '../data/ijeConfig'
+import mlConfig from '../mlConfig'
 
 api = express.Router()
 
@@ -49,5 +50,22 @@ api.post '/setContest', wrap (req, res) ->
 
 api.get '/contest', wrap (req, res) ->
     res.status(200).send("" + req.session.contest)
+
+api.get '/contestData', wrap (req, res) ->
+    cc = await contestConfig(req.session.contest)
+    m = await monitor(req.session.contest)
+    res.json 
+        start: cc.start
+        length: cc.length
+        time: m.time
+        status: m.status
+        title: cc.title
+        problemsCount: Object.keys(cc.problems).length
+        partiesCount: Object.keys(cc.parties).length
+        submitsCount: m.nsubmits
+        dst: mlConfig.dst
+        statements: cc.statements
+        problems: cc.problems
+
 
 export default api
