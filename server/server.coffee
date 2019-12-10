@@ -49,6 +49,11 @@ app.use session
     resave: false
     saveUninitialized: false
 
+app.use (req, res, next) ->
+    if not req.session?.contest
+        req.session.contest = 0
+    next()
+
 app.use '/api', api
 
 app.get '/status', (req, res) ->
