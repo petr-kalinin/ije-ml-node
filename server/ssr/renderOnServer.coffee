@@ -14,6 +14,7 @@ import Sceleton from '../../client/components/Sceleton'
 
 import createStore from '../../client/redux/store'
 import awaitAll from '../../client/lib/awaitAll'
+import {callApiWithBody} from '../../client/lib/callApi'
 
 import logger from '../log'
 
@@ -42,10 +43,10 @@ export default renderOnServer = (req, res, next) =>
     try
         initialState = 
             data: [
-                #{data: req.user
-                #success: true
-                #updateTime: new Date()
-                #url: "me"}
+                {data: await callApiWithBody 'me', 'GET', {"Cookie": req.headers.cookie}
+                success: true
+                updateTime: new Date()
+                url: "me"}
             ],
             clientCookie: req.headers.cookie,
         store = createStore(initialState)
