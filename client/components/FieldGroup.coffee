@@ -2,12 +2,12 @@ React = require('react')
 
 Control = (props) ->
     if props.type == "select"
-        <select name={props.id} onChange={props.onChange}>
+        <select name={props.id} onChange={props.onChange} value={props.value}>
             {
             res = []
             a = (x) -> res.push x
             for key, name of props.options
-                a <option value={key} key={key} selected={key==props.value}>{name}</option>
+                a <option value={key} key={key}>{name}</option>
             res
             }
         </select>

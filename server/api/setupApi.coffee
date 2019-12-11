@@ -4,6 +4,7 @@ import acmConfig, {contestConfig} from '../data/acmConfig'
 import monitor from '../data/monitor'
 import ijeConfig from '../data/ijeConfig'
 import mlConfig from '../mlConfig'
+import logger from '../log'
 
 api = express.Router()
 
@@ -42,9 +43,29 @@ api.post '/setContest', wrap (req, res) ->
     req.session.contest = id
     res.status(200).json({set: "ok"})
 
+api.post '/login', wrap (req, res) ->
+    {contest, username, password} = req.body
+    logger.info "Try to log in #{username}, #{password}, #{contest}"
+    if not contest? or not username? or not password?
+        res.status(400).send("No data")
+        return
+    contest = +contest
+    try
+        config = await contestConfig(contest)
+    catch
+        res.status(400).send("Unknown id")
+        return
+    if not (username of config.parties) or (password != config.parties[username].password)
+        res.status(403).send("Wrong login or password")
+        return
+    req.session.contest = contest
+    req.session.username = username
+    res.status(200).json({logged: "ok"})
+
 api.get '/me', wrap (req, res) ->
     res.status(200).json
         contest: req.session.contest
+        username: req.session.username
 
 api.get '/contests', wrap (req, res) ->
     result = {}

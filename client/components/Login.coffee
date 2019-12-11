@@ -18,7 +18,7 @@ class Login extends React.Component
         @state =
             username: ""
             password: ""
-            contest: props.contest
+            contest: props.me.contest
         @setField = @setField.bind(this)
         @tryLogin = @tryLogin.bind(this)
 
@@ -38,6 +38,7 @@ class Login extends React.Component
             data = await callApi "login", {
                 username: @state.username,
                 password: @state.password,
+                contest: @state.contest
             }
             if not data.logged
                 throw "Error"
@@ -87,6 +88,9 @@ class Login extends React.Component
                             options={@props.contests}/>
                     </tbody></table>
                 else
+                    <Loader/>
+                }
+                {
                     @state.message && <p><b>{@state.message}</b></p>
                 }
                 <input type="submit" disabled={!canSubmit} value="OK"/>
@@ -104,5 +108,6 @@ mapDispatchToProps = (dispatch) ->
 options = 
     urls: (props) ->
         contests: "contests"
+        me: "me"
 
 export default withRouter(ConnectedComponent(connect(mapStateToProps, mapDispatchToProps)(Login), options))
