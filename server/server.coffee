@@ -41,6 +41,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.raw({type: 'multipart/form-data'}))
 
+app.use (req, res, next) ->
+    logger.info "Request #{req.path}"
+    next()
+
 app.use session
     cookie:
         maxAge: 10 * 60 * 60 * 1000

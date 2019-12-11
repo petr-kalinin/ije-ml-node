@@ -29,12 +29,6 @@ api.get '/contestConfig/:id', wrap (req, res) ->
 api.get '/monitor/:id', wrap (req, res) ->
     res.json(await monitor(+req.params.id))
 
-api.get '/session', wrap (req, res) ->
-    if not req.session?.i
-        req.session.i = 0
-    req.session.i++
-    res.status(200).send("" + req.session.i)
-
 api.post '/setContest', wrap (req, res) ->
     if not req.body?.id?
         res.status(400).send("No id")
@@ -48,8 +42,9 @@ api.post '/setContest', wrap (req, res) ->
     req.session.contest = id
     res.status(200).json({set: "ok"})
 
-api.get '/contest', wrap (req, res) ->
-    res.status(200).send("" + req.session.contest)
+api.get '/me', wrap (req, res) ->
+    res.status(200).json
+        contest: req.session.contest
 
 api.get '/contests', wrap (req, res) ->
     result = {}
@@ -58,9 +53,9 @@ api.get '/contests', wrap (req, res) ->
         result[i] = (await contestConfig(i)).title
     res.json(result)
 
-api.get '/contestData', wrap (req, res) ->
-    cc = await contestConfig(req.session.contest)
-    m = await monitor(req.session.contest)
+api.get '/contestData/:id', wrap (req, res) ->
+    cc = await contestConfig(+req.params.id)
+    m = await monitor(+req.params.id)
     res.json 
         start: cc.start
         length: cc.length
@@ -73,6 +68,9 @@ api.get '/contestData', wrap (req, res) ->
         dst: mlConfig.dst
         statements: cc.statements
         problems: cc.problems
+
+api.all /\/.*/, wrap (req, res) ->
+    res.status(404).send("Not found")
 
 
 export default api

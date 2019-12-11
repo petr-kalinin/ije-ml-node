@@ -42,10 +42,10 @@ export default renderOnServer = (req, res, next) =>
     try
         initialState = 
             data: [
-                {data: req.user
-                success: true
-                updateTime: new Date()
-                url: "me"}
+                #{data: req.user
+                #success: true
+                #updateTime: new Date()
+                #url: "me"}
             ],
             clientCookie: req.headers.cookie,
         store = createStore(initialState)
@@ -77,6 +77,7 @@ export default renderOnServer = (req, res, next) =>
             </Provider>
 
         html = renderToString(wrappedElement)
+
         await awaitAll(store.getState().dataPromises)
 
         wrappedElement = <Provider store={store}>

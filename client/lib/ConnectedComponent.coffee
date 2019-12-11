@@ -75,7 +75,6 @@ export default ConnectedComponent = (Component, options) ->
 
         componentWillUnmount: ->
             if @timeout
-                console.log "Clearing timeout"
                 clearTimeout(@timeout)
 
         componentDidUpdate: (prevProps, prevState) ->
@@ -103,11 +102,8 @@ export default ConnectedComponent = (Component, options) ->
         requestDataAndSetTimeout: () ->
             try
                 await awaitAll(@requestData(options.timeout))
-                console.log "Updated data", @urls()
             catch e
-                console.log "Can't reload data", @urls(), e
             if options.timeout
-                console.log "Setting timeout", @urls()
                 @timeout = setTimeout((() => @requestDataAndSetTimeout()), options.timeout)
 
     mapStateToProps = (state, ownProps) ->

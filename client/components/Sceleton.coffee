@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import LANG from '../lib/lang'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
+import withMe from '../lib/withMe'
 
 TopTable = (props) ->
         <table width="100%" className="top"><tbody>
@@ -23,10 +24,11 @@ TopTable = (props) ->
 
 topTableOptions = 
     urls: (props) ->
-        contestData: "contestData"
+        contestData: "contestData/#{props.me.contest}"
+
     timeout: 10000
 
-TopTable = ConnectedComponent(TopTable, topTableOptions)
+TopTable = withMe(ConnectedComponent(TopTable, topTableOptions))
 
 HrefsTable = (props) ->
     w = Math.floor(100/(props.hrefs.length+3));
