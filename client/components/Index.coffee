@@ -5,6 +5,7 @@ import checkMonitorTime from '../lib/checkMonitorTime'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMe from '../lib/withMe'
+import withContestData from '../lib/withContestData'
 
 showstat = (name, stat) ->
     <div key={name}>
@@ -46,10 +47,4 @@ Index = (props) ->
 
     res
 
-options = 
-    urls: (props) ->
-        contestData: "contestData/#{props.me.contest}"
-
-    timeout: 10000
-
-export default withMe(ConnectedComponent(Index, options))
+export default withContestData(Index)

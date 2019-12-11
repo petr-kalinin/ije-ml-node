@@ -6,6 +6,7 @@ import LANG from '../lib/lang'
 
 import ConnectedComponent from '../lib/ConnectedComponent'
 import withMe from '../lib/withMe'
+import withContestData from '../lib/withContestData'
 
 TopTable = (props) ->
         <table width="100%" className="top"><tbody>
@@ -22,16 +23,10 @@ TopTable = (props) ->
             </tr>
         </tbody></table>
 
-topTableOptions = 
-    urls: (props) ->
-        contestData: "contestData/#{props.me.contest}"
-
-    timeout: 10000
-
-TopTable = withMe(ConnectedComponent(TopTable, topTableOptions))
+TopTable = withContestData(TopTable)
 
 HrefsTable = (props) ->
-    w = Math.floor(100/(props.hrefs.length+3));
+    w = Math.floor(100/(props.hrefs.length+5));
 
     <table width="100%" className="hrefs" cellSpacing="0"><tbody>
         <tr>
@@ -45,34 +40,33 @@ HrefsTable = (props) ->
                     {inner}
                 </td>
             )}
-            <td className="login" width={3*w + "%"} align="center">
-                {if login?
-                    <span>{LANG.NotLoggedIn}
-                        {has_contest && <span>[<Link to="/login">{LANG.LogIn}</Link>] [<Link to="/change_contest">{LANG.ChangeContest}</Link>]</span>}
-                    </span>
+            <td className="login" width={5*w + "%"} align="center">
+                {if props.me.username?
+                    <span>{LANG.LoggedAsSbToSth(<b>{props.me.username}: {props.me.name}</b>, <b>{props.me.contestTitle}</b>)}. [<Link to="/logout">{LANG.LogOut}</Link>]</span>
                 else
-                    <span>{LANG.LoggedAsSbToSth(<b>{props.login}</b>, <b>{props.team_name}</b>)}. [<Link to="/logout">{LANG.LogOut}</Link>]</span>
+                    <span>{LANG.NotLoggedIn}
+                        <span> [<Link to="/login">{LANG.LogIn}</Link>] [<Link to="/changeContest">{LANG.ChangeContest}</Link>]</span>
+                    </span>
                 }
             </td>
         </tr>
     </tbody></table>
 
+HrefsTable = withMe(HrefsTable)
+
 export default Sceleton = (Component) ->
     (props) ->
         # TODO
-        has_contest = true
         curpage = "/"
-        login = "QWE"
-        team_name = "1234"
         hrefs=[
              {text: "Home", href: "/", active: true},
              {text: "Submit", href: "/submit", active: login?},
-             {text: "Standings", href: "/standings", active: has_contest},
+             {text: "Standings", href: "/standings", active: true},
              {text: "Messages", href: "/messages", active: login?}
         ]
         <div>
             <TopTable/>
-            <HrefsTable hrefs={hrefs} curpage={curpage} has_contest={has_contest} login={login} team_name={team_name}/>
+            <HrefsTable hrefs={hrefs} curpage={curpage}/>
             <table width="100%" className="main"><tbody><tr><td>
                 <Component/>
             </td></tr></tbody></table>

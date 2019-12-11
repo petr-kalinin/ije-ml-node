@@ -1,10 +1,10 @@
 import ConnectedComponent from '../lib/ConnectedComponent'
 
-options = 
+meOptions = 
     urls: (props) ->
         me: "me"
-        
     timeout: 10000
 
+
 export default withMe = (component) ->
-    ConnectedComponent(component, options)
+    ConnectedComponent(component, meOptions)

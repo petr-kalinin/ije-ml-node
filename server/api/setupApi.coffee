@@ -41,6 +41,7 @@ api.post '/setContest', wrap (req, res) ->
         res.status(400).send("Unknown id")
         return
     req.session.contest = id
+    req.session.username = undefined
     res.status(200).json({set: "ok"})
 
 api.post '/login', wrap (req, res) ->
@@ -63,9 +64,12 @@ api.post '/login', wrap (req, res) ->
     res.status(200).json({logged: "ok"})
 
 api.get '/me', wrap (req, res) ->
+    cc = await contestConfig(req.session.contest)
     res.status(200).json
         contest: req.session.contest
         username: req.session.username
+        name: cc.parties[req.session.username]?.name
+        contestTitle: cc.title
 
 api.get '/contests', wrap (req, res) ->
     result = {}
