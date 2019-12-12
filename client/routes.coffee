@@ -9,6 +9,7 @@ import {
 import Index from './components/Index'
 import Login from './components/Login'
 import ChangeContest from './components/ChangeContest'
+import Standings from './components/Standings'
 
 class NoMatch extends React.Component
     render: () ->
@@ -31,6 +32,12 @@ export default [
         component: ChangeContest,
         key: "/changeContest"
         path: "/changeContest"
+        exact: true
+    },
+    {
+        component: Standings,
+        key: "/standings"
+        path: "/standings"
         exact: true
     },
     {

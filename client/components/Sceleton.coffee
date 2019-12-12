@@ -2,6 +2,8 @@ React = require('react')
 
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
+
 import * as actions from '../redux/actions'
 
 import LANG from '../lib/lang'
@@ -40,15 +42,19 @@ mapDispatchToProps = (dispatch, ownProps) ->
 LogOut = connect(mapStateToProps, mapDispatchToProps)(LogOut)    
 
 HrefsTable = (props) ->
-    w = Math.floor(100/(props.hrefs.length+5));
+    w = Math.floor(100/(props.hrefs.length+5))
+    curpage = props.match.path
+    hasLogin = props.me.username?
 
     <table width="100%" className="hrefs" cellSpacing="0"><tbody>
         <tr>
             {props.hrefs.map((href) ->
-                inner = <Link to={href.href}>{LANG[href.text]}</Link>
-                if not href.active
+                inner = LANG[href.text]
+                if href.needLogin and not hasLogin
                     inner = <font className="disabled">{inner}</font>
-                if props.curpage == href.href
+                else
+                    inner = <Link to={href.href}>{inner}</Link>
+                if curpage == href.href
                     inner = <b>{inner}</b>
                 <td align="center" width={w + "%"} className="href" key={href.text}>
                     {inner}
@@ -66,21 +72,21 @@ HrefsTable = (props) ->
         </tr>
     </tbody></table>
 
-HrefsTable = withMe(HrefsTable)
+HrefsTable = withRouter(withMe(HrefsTable))
 
 export default Sceleton = (Component) ->
     (props) ->
         # TODO
         curpage = "/"
         hrefs=[
-             {text: "Home", href: "/", active: true},
-             {text: "Submit", href: "/submit", active: login?},
-             {text: "Standings", href: "/standings", active: true},
-             {text: "Messages", href: "/messages", active: login?}
+             {text: "Home", href: "/", needLogin: false},
+             {text: "Submit", href: "/submit", needLogin: true},
+             {text: "Standings", href: "/standings", needLogin: false},
+             {text: "Messages", href: "/messages", needLogin: true}
         ]
         <div>
             <TopTable/>
-            <HrefsTable hrefs={hrefs} curpage={curpage}/>
+            <HrefsTable hrefs={hrefs}/>
             <table width="100%" className="main"><tbody><tr><td>
                 <Component/>
             </td></tr></tbody></table>

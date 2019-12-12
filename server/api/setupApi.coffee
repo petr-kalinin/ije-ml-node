@@ -83,6 +83,7 @@ api.get '/contests', wrap (req, res) ->
     res.json(result)
 
 api.get '/contestData/:id', wrap (req, res) ->
+    ac = await acmConfig()
     cc = await contestConfig(+req.params.id)
     m = await monitor(+req.params.id)
     res.json 
@@ -97,6 +98,10 @@ api.get '/contestData/:id', wrap (req, res) ->
         dst: mlConfig.dst
         statements: cc.statements
         problems: cc.problems
+        qacm: ac["acm-contest"][+req.params.id]["qacm-dll"]
+
+api.get '/standings/:contestId', wrap (req, res) ->
+    res.json([ {id: "1", name: "name"}])
 
 api.all /\/.*/, wrap (req, res) ->
     res.status(404).send("Not found")
