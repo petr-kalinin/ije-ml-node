@@ -31,16 +31,16 @@ api.get '/monitor/:id', wrap (req, res) ->
     res.json(await monitor(+req.params.id))
 
 api.post '/setContest', wrap (req, res) ->
-    if not req.body?.id?
+    if not req.body?.contest?
         res.status(400).send("No id")
         return
-    id = +req.body?.id
+    contest = +req.body?.contest
     try
-        config = await contestConfig(id)
+        config = await contestConfig(contest)
     catch
         res.status(400).send("Unknown id")
         return
-    req.session.contest = id
+    req.session.contest = contest
     req.session.username = undefined
     res.status(200).json({set: "ok"})
 
