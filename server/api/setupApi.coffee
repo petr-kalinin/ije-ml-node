@@ -63,6 +63,10 @@ api.post '/login', wrap (req, res) ->
     req.session.username = username
     res.status(200).json({logged: "ok"})
 
+api.post '/logout', wrap (req, res) ->
+    req.session.username = undefined
+    res.status(200).json({})
+
 api.get '/me', wrap (req, res) ->
     cc = await contestConfig(req.session.contest)
     res.status(200).json

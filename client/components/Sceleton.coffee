@@ -1,6 +1,8 @@
 React = require('react')
 
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import * as actions from '../redux/actions'
 
 import LANG from '../lib/lang'
 
@@ -25,6 +27,18 @@ TopTable = (props) ->
 
 TopTable = withContestData(TopTable)
 
+LogOut = (props) ->
+    <a href="#" onClick={props.logout}>{LANG.LogOut}</a>
+
+mapStateToProps = (state) ->
+    return {}
+
+mapDispatchToProps = (dispatch, ownProps) ->
+    return
+        logout: () -> dispatch(actions.logout())
+
+LogOut = connect(mapStateToProps, mapDispatchToProps)(LogOut)    
+
 HrefsTable = (props) ->
     w = Math.floor(100/(props.hrefs.length+5));
 
@@ -42,7 +56,7 @@ HrefsTable = (props) ->
             )}
             <td className="login" width={5*w + "%"} align="center">
                 {if props.me.username?
-                    <span>{LANG.LoggedAsSbToSth(<b>{props.me.username}: {props.me.name}</b>, <b>{props.me.contestTitle}</b>)}. [<Link to="/logout">{LANG.LogOut}</Link>]</span>
+                    <span>{LANG.LoggedAsSbToSth(<b>{props.me.username}: {props.me.name}</b>, <b>{props.me.contestTitle}</b>)}. [<LogOut/>]</span>
                 else
                     <span>{LANG.NotLoggedIn}
                         <span> [<Link to="/login">{LANG.LogIn}</Link>] [<Link to="/changeContest">{LANG.ChangeContest}</Link>]</span>

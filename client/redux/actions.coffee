@@ -43,5 +43,5 @@ export invalidateAllData = () ->
 
 export logout = () ->
     (dispatch) ->
-        await callApi 'logout'
+        await callApi 'logout', {}
         dispatch(invalidateAllData())
