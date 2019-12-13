@@ -47,6 +47,10 @@ export default renderOnServer = (req, res, next) =>
                 success: true
                 updateTime: new Date()
                 url: "me"}
+                {data: await callApiWithBody "contestData/#{req.session.contest}", 'GET', {"Cookie": req.headers.cookie}
+                success: true
+                updateTime: new Date()
+                url: "contestData/#{req.session.contest}"}
             ],
             clientCookie: req.headers.cookie,
         store = createStore(initialState)

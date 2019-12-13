@@ -1,0 +1,29 @@
+.team0{
+    background:#ffffff;
+}
+.team1{
+    background:#f0f0f0;
+}
+.ProblemHead,
+.Problem,
+.ProbFull, .ProbNotFull, .No{
+    width:3em;
+    text-align:center;
+}
+.PointsHead, .FullHead,
+.Points, .Full {
+    width:5em;
+    text-align:center;
+}
+td.ProbFull{
+    color:green;
+    font-weight:bold;
+}
+td.ProbNotFull{
+    color:red;
+    font-weight:bold;
+}
+td.No{
+    color:gray;
+}
+  

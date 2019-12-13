@@ -88,6 +88,7 @@ api.get '/contestData/:id', wrap (req, res) ->
         statements: cc.statements
         problems: cc.problems
         qacm: ac["acm-contest"][+req.params.id]["qacm-dll"]
+        calculatePoints: cc["calculate-points"] == "true"
 
 api.get '/standings/:contestId', wrap (req, res) ->
     contestId = +req.params.contestId

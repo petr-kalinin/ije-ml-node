@@ -38,7 +38,7 @@ class Standings extends React.Component
             <tr className={styles.head}>
                 <td className={styles.IdHead}>{LANG.Id}</td>
                 <td className={styles.PartyHead}>{LANG.Party}</td>
-                <TableHeaders/>
+                <TableHeaders standings={@props.standings} me={@props.me} contestData={@props.contestData}/>
             </tr>
 
             {
@@ -46,7 +46,7 @@ class Standings extends React.Component
                 <tr className={if p.id == @props.me.username then styles.my else qacm.TeamClass(p)} key={p.id}>
                     <td className={styles.Id}>{p.id}</td>
                     <td className={styles.Party}>{p.name}</td>
-                    <AddInfo party={p}/>
+                    <AddInfo row={p} contestData={@props.contestData}/>
                 </tr>
             )
             }
