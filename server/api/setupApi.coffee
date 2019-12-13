@@ -18,18 +18,6 @@ wrap = (fn) ->
 api.get '/forbidden', wrap (req, res) ->
     res.status(403).send('No permissions')
 
-api.get '/acmConfig', wrap (req, res) ->
-    res.json(await acmConfig())
-
-api.get '/ijeConfig', wrap (req, res) ->
-    res.json(await ijeConfig())
-
-api.get '/contestConfig/:id', wrap (req, res) ->
-    res.json(await contestConfig(+req.params.id))
-
-api.get '/monitor/:id', wrap (req, res) ->
-    res.json(await monitor(+req.params.id))
-
 api.post '/setContest', wrap (req, res) ->
     if not req.body?.contest?
         res.status(400).send("No id")

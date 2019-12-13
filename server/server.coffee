@@ -15,6 +15,7 @@ import download from './lib/download'
 import sleep from './lib/sleep'
 
 import api from './api/setupApi'
+import debug from './api/setupDebug'
 
 process.on 'unhandledRejection', (r) ->
     logger.error "Unhandled rejection "
@@ -59,6 +60,8 @@ app.use (req, res, next) ->
     next()
 
 app.use '/api', api
+
+app.use '/debug', debug
 
 app.get '/status', (req, res) ->
     logger.info "Query string", req.query
