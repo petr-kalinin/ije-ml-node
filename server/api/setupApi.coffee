@@ -62,6 +62,7 @@ api.get '/me', wrap (req, res) ->
         contest: req.session.contest
         username: req.session.username
         name: cc.parties[req.session.username]?.name
+        admin: cc.parties[req.session.username]?.admin
         contestTitle: cc.title
 
 api.get '/contests', wrap (req, res) ->
@@ -102,6 +103,14 @@ api.get '/standings/:contestId', wrap (req, res) ->
     qacm = getQacm(qacmDll).standings
     result = qacm.makeStandings(cc, m, req.session.username)
     res.json(result)
+
+api.get '/messages/:contestId', wrap (req, res) ->
+    contestId = +req.params.contestId
+    if contestId != req.session.contest
+        res.status(403).send("No permission")
+        return
+    res.json([])
+
 
 api.all /\/.*/, wrap (req, res) ->
     res.status(404).send("Not found")
