@@ -5,6 +5,7 @@ import monitor from '../data/monitor'
 import ijeConfig from '../data/ijeConfig'
 import mlConfig from '../mlConfig'
 import logger from '../log'
+import getQacm from '../qacm/getQacm'
 
 api = express.Router()
 
@@ -89,7 +90,17 @@ api.get '/contestData/:id', wrap (req, res) ->
         qacm: ac["acm-contest"][+req.params.id]["qacm-dll"]
 
 api.get '/standings/:contestId', wrap (req, res) ->
-    res.json([ {id: "1", name: "name"}])
+    contestId = +req.params.contestId
+    if contestId != req.session.contest
+        res.status(403).send("No permission")
+        return
+    ac = await acmConfig()
+    cc = await contestConfig(contestId)
+    m = await monitor(contestId)
+    qacmDll = ac["acm-contest"][contestId]["qacm-dll"]
+    qacm = getQacm(qacmDll).standings
+    result = qacm.makeStandings(cc, m, req.session.username)
+    res.json(result)
 
 api.all /\/.*/, wrap (req, res) ->
     res.status(404).send("Not found")
