@@ -90,7 +90,7 @@ class Messages extends React.Component
                                 aa = (x) -> rr.push x
                                 was = false
                                 for m in @props.messages
-                                    if m.prob == prob.id
+                                    if m.problem == prob.id
                                         was = true
                                         aa <MessageLine message={m} me={@props.me} qacm={qacm} contestData={@props.contestData} handleReload={@props.handleReload} key={m.id}/>
                                 if not was
