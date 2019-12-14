@@ -115,7 +115,13 @@ api.get '/messages/:contestId', wrap (req, res) ->
     if contestId != req.session.contest
         res.status(403).send("No permission")
         return
-    res.json([])
+    ac = await acmConfig()
+    cc = await contestConfig(contestId)
+    m = await monitor(contestId)
+    qacmDll = ac["acm-contest"][contestId]["qacm-dll"]
+    qacm = getQacm(qacmDll).messages
+    result = qacm.makeMessages(cc, m, req.session.username)
+    res.json(result)
 
 
 api.all /\/.*/, wrap (req, res) ->

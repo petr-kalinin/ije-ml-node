@@ -54,8 +54,6 @@ export ProbHeader = (props) ->
         }
     </h2>
 
-export AddMessage = (props) -> <td>addmessage</td>
-
 export AddHeader = (props) -> 
     res = [
         <td className={styles.points} key="points">{qLANG.Points}</td>
@@ -68,5 +66,51 @@ export AddHeader = (props) ->
         res.push <td className={styles.token} key="token">{qLANG.Token}</td>
     res
 
+textColor = () ->
+    # TODO
+    ""
+
+export class AddMessage extends React.Component
+    constructor: (props) ->
+        super(props)
+        @useToken = @useToken.bind(this)
+
+    useToken: () ->
+        # TODO
+
+    render: () ->
+        m = @props.message
+        restext = ""
+        comment = ""
+        if m.testres.length
+            restext = "OK"
+            for t, n in m.testres
+                if not (t.outcome in ["accepted", "accepted-not-counted"])
+                    # TODO: convert outcome to text
+                    restext = t.outcome
+                    comment = t.comment
+                    if not @props.contestData.showComments
+                        comment = restext
+                    if comment.length > 50
+                        comment = comment.substr(0, 50)
+                    if restext == "CE"
+                        comment = ""
+                    break
+
+        points = m.points
+        if m.full
+            points = <font className={styles.ProbFull}>{points}</font>
+        res = [
+            <td className={styles.points_} key="points">{points}</td>
+        ]
+        if @props.contestData.showTests
+            res.push <td className={styles.stests_} key="stests">{if m.tests then "#{m.tests} / #{m.testsCount}" else "-"}</td>
+            res.push <td className={styles.firstWA_} key="firstWA"><font color={textColor(res)}>{restext}</font></td>
+            res.push <td className={styles.comment_} key="comment">{comment}</td>
+        if @props.contestData.tokenPeriod >= 0
+            res.push <td className={styles.token_}  key="token">
+                {m.canUseToken && <a href="#" onClick={@props.useToken}>{qLANG.UseToken}</a>}
+            </td>
+        res
 
 export hasMessageDetails = () -> true

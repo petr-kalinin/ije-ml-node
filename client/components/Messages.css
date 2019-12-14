@@ -23,12 +23,18 @@
     width:60px;
     padding-left:10px;
 }
-.party_{
-    border-bottom:1px solid #220055;
-}
 .nosubmissions{
     font-style:italic;
     text-align:center;
     font-size:90%;
 }
-  
+td.time,td.time_{
+    width:60px;
+    padding-left:10px;
+}
+td.prob,td.prob_{
+    width:80px;
+}
+td.time,td.prob,td.party{
+    border-bottom:1px solid #220055;
+}

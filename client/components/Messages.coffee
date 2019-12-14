@@ -14,13 +14,13 @@ MessageLine = (props) ->
     m = props.message
     time = m.time
     if props.qacm.hasMessageDetails()
-        time=<Link to="/messageDetails/#{m[id]}">{time}</Link>
-    AddMessage = m.qacm.AddMessage
+        time = <Link to="/messageDetails/#{m.id}">{time}</Link>
+    AddMessage = props.qacm.AddMessage
     <tr>
         {props.me.admin && <td className={styles.party_}>{m.party}</td>}
-        <td className={styles.time_}>{m.time}</td>
-        <td className={styles.prob_}>{m.prob}</td>
-        <AddMessage/>
+        <td className={styles.time_}>{time}</td>
+        <td className={styles.prob_}>{m.problem}</td>
+        <AddMessage message={props.message} contestData={props.contestData} handleReload={props.handleReload}/>
     </tr>
 
 TableHeader = (props) ->
@@ -70,7 +70,7 @@ class Messages extends React.Component
             {if @state.sortByTime
                 <table className={styles.tests} cellSpacing="0"><tbody>
                 <TableHeader me={@props.me} qacm={qacm} contestData={@props.contestData}/>
-                {@props.messages.map((m) => <Message message={m} me={@props.me} qacm={qacm} key={m.id}/>)}
+                {@props.messages.map((m) => <MessageLine message={m} me={@props.me} qacm={qacm} contestData={@props.contestData} handleReload={@props.handleReload} key={m.id}/>)}
                 {@props.messages.length == 0 && <NoSubmissions columns={columns}/>}
                 </tbody></table>
             else        
@@ -92,7 +92,7 @@ class Messages extends React.Component
                                 for m in @props.messages
                                     if m.prob == prob.id
                                         was = true
-                                        aa <Message message={m} me={@props.me} qacm={qacm} key={m.id}/>
+                                        aa <MessageLine message={m} me={@props.me} qacm={qacm} contestData={@props.contestData} handleReload={@props.handleReload} key={m.id}/>
                                 if not was
                                     aa <NoSubmissions columns={columns} key="_no"/>
                                 rr
