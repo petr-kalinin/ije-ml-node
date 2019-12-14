@@ -73,10 +73,13 @@ api.get '/contests', wrap (req, res) ->
     res.json(result)
 
 api.get '/contestData/:id', wrap (req, res) ->
+    contestId = req.params.id
     ac = await acmConfig()
-    cc = await contestConfig(+req.params.id)
-    m = await monitor(+req.params.id)
-    res.json 
+    cc = await contestConfig(+contestId)
+    m = await monitor(+contestId)
+    qacmDll = ac["acm-contest"][contestId]["qacm-dll"]
+    qacmData = getQacm(qacmDll).contestData
+    result =
         start: cc.start
         length: cc.length
         time: m.time
@@ -88,8 +91,11 @@ api.get '/contestData/:id', wrap (req, res) ->
         dst: mlConfig.dst
         statements: cc.statements
         problems: cc.problems
-        qacm: ac["acm-contest"][+req.params.id]["qacm-dll"]
+        qacm: ac["acm-contest"][+contestId]["qacm-dll"]
         calculatePoints: cc["calculate-points"] == "true"
+    qResult = qacmData(cc)
+    result = {result..., qResult...}
+    res.json(result)
 
 api.get '/standings/:contestId', wrap (req, res) ->
     contestId = +req.params.contestId

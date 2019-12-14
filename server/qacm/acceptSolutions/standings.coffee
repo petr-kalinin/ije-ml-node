@@ -17,6 +17,9 @@ export makeStandings = (cc, m, currentUser) ->
             partyResult[problemId] =
                 points: +thisResult[if showFull then "real-points" else "points"]
                 attempts: +thisResult.attempts
+            if cc["token-period"] >= 0
+                partyResult[problemId].tokenWait = +thisResult["token-wait-time"]
+                partyResult[problemId].tokensRemaining = cc["max-tokens"] - thisResult["tokens-used"]
             partyResult[problemId].full = partyResult[problemId].points == +thisResult["max-points"] and +thisResult["max-points"] > 0
             if partyResult[problemId].full
                 partyResult.full++

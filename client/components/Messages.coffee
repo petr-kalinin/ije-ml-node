@@ -29,7 +29,7 @@ TableHeader = (props) ->
         {props.me.admin && <td className={styles.party}>&nbsp;</td>}
         <td className={styles.time}>{LANG.Time}</td>
         <td className={styles.prob}>{LANG.Problem}</td>
-        <AddHeader/>
+        <AddHeader contestData={props.contestData}/>
     </tr>
 
 NoSubmissions = (props) ->
@@ -52,14 +52,14 @@ class Messages extends React.Component
     render: () ->
         qacm = getQacm(@props.contestData.qacm).messages
         GlobalHeader = qacm.GlobalHeader
-        columns = qacm.columns()
+        columns = qacm.AddHeader({contestData: @props.contestData}).length
         if @props.me.admin
             columns++
         columns += 2
         ProbHeader = qacm.ProbHeader
         <div>
             <h1>{LANG.Messages}</h1>
-            <GlobalHeader/>
+            <GlobalHeader standings={@props.standings} me={@props.me} contestData={@props.contestData}/>
             {qacm.hasMessageDetails() && <font className={styles.msgdetails}>{LANG.ClickOnMessageTime}</font>}
             <div className={styles.sort}>
                 {LANG.SortBy} {" "}
@@ -69,14 +69,14 @@ class Messages extends React.Component
             </div>
             {if @state.sortByTime
                 <table className={styles.tests} cellSpacing="0"><tbody>
-                <TableHeader me={@props.me} qacm={qacm}/>
+                <TableHeader me={@props.me} qacm={qacm} contestData={@props.contestData}/>
                 {@props.messages.map((m) => <Message message={m} me={@props.me} qacm={qacm} key={m.id}/>)}
                 {@props.messages.length == 0 && <NoSubmissions columns={columns}/>}
                 </tbody></table>
             else        
                 <div>    
                 <table className={styles.tests_} cellSpacing="0"><tbody>
-                <TableHeader me={@props.me} qacm={qacm}/>
+                <TableHeader me={@props.me} qacm={qacm} contestData={@props.contestData}/>
                 </tbody></table>
                 {
                     res = []
@@ -108,5 +108,6 @@ class Messages extends React.Component
 options =
     urls: (props) ->
         messages: "messages/#{props.me.contest}"
+        standings: "standings/#{props.me.contest}"
 
 export default withContestData(ConnectedComponent(Messages, options))
