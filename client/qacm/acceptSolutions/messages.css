@@ -25,3 +25,23 @@ td.firstWA,td.firstWA_{
 }
 td.comment,td.comment_{
 }
+.indent {
+    padding-left: 5em;
+}
+.separator {
+    padding-left: 3em;
+}
+font.probinfo{
+    font-size:80%;
+    font-weight:normal;
+}
+span.tokensRemaining{
+    font-size:90%;
+    font-weight:normal;
+    padding-left:50px;
+}
+font.ProbFull{
+    color:green;
+    font-weight:bold;
+}
+  

@@ -83,7 +83,7 @@ class Messages extends React.Component
                     a = (x) -> res.push x
                     for id, prob of @props.contestData.problems
                         a <div key={id}>
-                            <ProbHeader prob={prob}/>
+                            <ProbHeader prob={prob} me={@props.me} standings={@props.standings} contestData={@props.contestData}/>
                             <table className={styles.tests} cellSpacing="0"><tbody>
                             {
                                 rr = []

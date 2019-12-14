@@ -2,6 +2,7 @@ React = require('react')
 
 import styles from './standings.css'
 import qLANG from './lang'
+import Balloon from '../../components/Balloon'
 
 export TableHeaders = (props) -> 
     mySolved = {}
@@ -13,7 +14,8 @@ export TableHeaders = (props) ->
     result = []
     for key, problemData of props.contestData.problems
         result.push <td className={styles.ProblemHead} key={key}>
-            {mySolved[key] && <img alt={key} src="/api/balloon/#{key}"/> || key}
+            {mySolved[key] && <Balloon id={key}/>}
+            {key}
         </td>
     if props.contestData.calculatePoints
         result.push <td className={styles.PointsHead} key="_pts">{qLANG.Pts}</td>
