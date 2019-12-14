@@ -58,10 +58,9 @@ export AddHeader = (props) ->
     res = [
         <td className={styles.points} key="points">{qLANG.Points}</td>
     ]
-    if props.contestData.showTests
-        res.push <td className={styles.stests} key="stests">{qLANG.SuccessfullTests}</td>
-        res.push <td className={styles.firstWA} key="firstWA">{qLANG.FirstWA}</td>
-        res.push <td className={styles.comment} key="comment">{qLANG.Comment}</td>
+    res.push <td className={styles.stests} key="stests">{props.contestData.showTests && qLANG.SuccessfullTests}</td>
+    res.push <td className={styles.firstWA} key="firstWA">{props.contestData.showTests && qLANG.FirstWA}</td>
+    res.push <td className={styles.comment} key="comment">{props.contestData.showTests && qLANG.Comment}</td>
     if props.contestData.tokenPeriod >= 0
         res.push <td className={styles.token} key="token">{qLANG.Token}</td>
     res
@@ -82,7 +81,7 @@ export class AddMessage extends React.Component
         m = @props.message
         restext = ""
         comment = ""
-        if m.testres.length
+        if m.testres?.length
             restext = "OK"
             for t, n in m.testres
                 if not (t.outcome in ["accepted", "accepted-not-counted"])
@@ -103,10 +102,9 @@ export class AddMessage extends React.Component
         res = [
             <td className={styles.points_} key="points">{points}</td>
         ]
-        if @props.contestData.showTests
-            res.push <td className={styles.stests_} key="stests">{if m.tests then "#{m.tests} / #{m.testsCount}" else "-"}</td>
-            res.push <td className={styles.firstWA_} key="firstWA"><font color={textColor(res)}>{restext}</font></td>
-            res.push <td className={styles.comment_} key="comment">{comment}</td>
+        res.push <td className={styles.stests_} key="stests">{if m.tests then "#{m.tests} / #{m.testsCount}" else ""}</td>
+        res.push <td className={styles.firstWA_} key="firstWA"><font color={textColor(res)}>{restext}</font></td>
+        res.push <td className={styles.comment_} key="comment">{comment}</td>
         if @props.contestData.tokenPeriod >= 0
             res.push <td className={styles.token_}  key="token">
                 {m.canUseToken && <a href="#" onClick={@props.useToken}>{qLANG.UseToken}</a>}

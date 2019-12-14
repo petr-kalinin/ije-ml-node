@@ -15,7 +15,7 @@ formMessage = (cc, m, problemRow, s, isAdmin) ->
     result.problem = s.problem
     result["filename"] = s["filename"]
     result["language-id"] = s["language-id"]
-    if cc["showtests"]
+    if cc["showtests"] == "true"
         nn = 0
         result["testres"] = []
         if (tokenused)
