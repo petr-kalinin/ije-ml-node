@@ -45,7 +45,7 @@ export default LANG =
     MessageDetails: 'Подробности сообщения'
     Messages: 'Сообщения'
     ClickOnMessageTime: "Щелкните на времени сообщения, чтобы просмотреть его подробности"
-    SortBy: "Сортировать по"
+    SortBy: "Сортировать по:"
     time: "времени"
     problem: "задаче"
     Time: "Время"
