@@ -23,6 +23,18 @@ MessageLine = (props) ->
         <AddMessage/>
     </tr>
 
+TableHeader = (props) ->
+    AddHeader = props.qacm.AddHeader
+    <tr>
+        {props.me.admin && <td className={styles.party}>&nbsp;</td>}
+        <td className={styles.time}>{LANG.Time}</td>
+        <td className={styles.prob}>{LANG.Problem}</td>
+        <AddHeader/>
+    </tr>
+
+NoSubmissions = (props) ->
+    <tr><td colSpan={props.columns} className={styles.nosubmissions}>{LANG.NoSubmissions}</td></tr>
+
 class Messages extends React.Component
     constructor: (props) ->
         super(props)
@@ -42,10 +54,9 @@ class Messages extends React.Component
         GlobalHeader = qacm.GlobalHeader
         columns = qacm.columns()
         if @props.me.admin
-            columns++            
-        AddHeader = qacm.AddHeader
+            columns++
+        columns += 2
         ProbHeader = qacm.ProbHeader
-        colspan = 3  # TODO
         <div>
             <h1>{LANG.Messages}</h1>
             <GlobalHeader/>
@@ -58,43 +69,35 @@ class Messages extends React.Component
             </div>
             {if @state.sortByTime
                 <table className={styles.tests} cellSpacing="0"><tbody>
-                <tr>
-                    {@props.me.admin && <td className={styles.party}>&nbsp;</td>}
-                    <td className={styles.time}>{LANG.Time}</td><td className={styles.prob}>{LANG.Problem}</td>
-                    <AddHeader/>
-                </tr>
+                <TableHeader me={@props.me} qacm={qacm}/>
                 {@props.messages.map((m) => <Message message={m} me={@props.me} qacm={qacm} key={m.id}/>)}
-                {@props.messages.length == 0 && <tr><td colSpan={colspan} className={styles.nosubmissions}>{LANG.NoSubmissions}</td></tr>}
+                {@props.messages.length == 0 && <NoSubmissions columns={columns}/>}
                 </tbody></table>
             else        
                 <div>    
                 <table className={styles.tests_} cellSpacing="0"><tbody>
-                <tr>
-                    {@props.me.admin && <td className={styles.party}>&nbsp;</td>}
-                    <td className={styles.time}>{LANG.Time}</td><td className={styles.prob}>{LANG.Problem}</td>
-                    <AddHeader/>
-                </tr>
+                <TableHeader me={@props.me} qacm={qacm}/>
                 </tbody></table>
                 {
                     res = []
-                    a = res.push
+                    a = (x) -> res.push x
                     for id, prob of @props.contestData.problems
                         a <div key={id}>
                             <ProbHeader prob={prob}/>
-                            <table className={styles.tests} cellSpacing="0">
+                            <table className={styles.tests} cellSpacing="0"><tbody>
                             {
                                 rr = []
-                                aa = rr.push
+                                aa = (x) -> rr.push x
                                 was = false
                                 for m in @props.messages
                                     if m.prob == prob.id
                                         was = true
                                         aa <Message message={m} me={@props.me} qacm={qacm} key={m.id}/>
                                 if not was
-                                    aa <tr><td colSpan={colspan} className={styles.nosubmissions}>{LANG.NoSubmissions}</td></tr>
+                                    aa <NoSubmissions columns={columns} key="_no"/>
                                 rr
                             }
-                            </table>
+                            </tbody></table>
                         </div>
                     res
                 }
