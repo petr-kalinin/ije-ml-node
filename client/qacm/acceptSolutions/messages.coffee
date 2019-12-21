@@ -2,6 +2,8 @@ React = require('react')
 
 import styles from './messages.css'
 import qLANG from './lang'
+import {LTEXT} from '../../lib/lang'
+import {xmlToOutcome, textColor} from '../../lib/ijeConsts'
 
 getMyRow = (standings, username) ->
     for row in standings
@@ -65,10 +67,6 @@ export AddHeader = (props) ->
         res.push <td className={styles.token} key="token">{qLANG.Token}</td>
     res
 
-textColor = () ->
-    # TODO
-    ""
-
 export class AddMessage extends React.Component
     constructor: (props) ->
         super(props)
@@ -81,18 +79,18 @@ export class AddMessage extends React.Component
         m = @props.message
         restext = ""
         comment = ""
+        outcome = ""
         if m.testres?.length
             restext = "OK"
+            outcome = "OK"
             for t, n in m.testres
                 if not (t.outcome in ["accepted", "accepted-not-counted"])
-                    # TODO: convert outcome to text
-                    restext = t.outcome
+                    outcome = xmlToOutcome[t.outcome]
+                    restext = LTEXT[outcome]
                     comment = t.comment
-                    if not @props.contestData.showComments
-                        comment = restext
                     if comment.length > 50
-                        comment = comment.substr(0, 50)
-                    if restext == "CE"
+                        comment = comment.substr(0, 50) + "..."
+                    if outcome == "CE"
                         comment = ""
                     break
 
@@ -103,7 +101,7 @@ export class AddMessage extends React.Component
             <td className={styles.points_} key="points">{points}</td>
         ]
         res.push <td className={styles.stests_} key="stests">{if m.tests then "#{m.tests} / #{m.testsCount}" else ""}</td>
-        res.push <td className={styles.firstWA_} key="firstWA"><font color={textColor(res)}>{restext}</font></td>
+        res.push <td className={styles.firstWA_} key="firstWA"><font color={textColor[outcome]}>{restext}</font></td>
         res.push <td className={styles.comment_} key="comment">{comment}</td>
         if @props.contestData.tokenPeriod >= 0
             res.push <td className={styles.token_}  key="token">

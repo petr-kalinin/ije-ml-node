@@ -1,3 +1,6 @@
+import {LTEXT} from '../../../client/lib/lang'
+import {xmlToOutcome} from '../../../client/lib/ijeConsts'
+
 hasTests = (s) ->
   return not (s[1]["outcome"] in ["compilation-error","not-tested"])
 
@@ -23,7 +26,8 @@ formMessage = (cc, m, problemRow, s, isAdmin) ->
                 if not test.id?
                     continue
                 if cc["showcomments"] != "true"
-                    test["comment"] = undefined
+                    outcome = xmlToOutcome[test.outcome]
+                    test["comment"] = LTEXT[outcome]
                     test["eval-comment"] = undefined
                 nn++
                 result["testres"].push(test)
