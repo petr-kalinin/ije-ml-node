@@ -77,3 +77,39 @@ td.loginimg{
 abbr{
   border-bottom: 2px dotted #220055;
 }
+tr.OK{
+  background:#BBEEBB;
+}
+tr.WA{
+  background:#EEBBBB;
+}
+tr.PE{
+  background:#BBEEEE;
+}
+tr.TL,tr.ML,tr.OL,tr.IL{
+  background:#BBBBEE;
+}
+tr.RE,tr.CR{
+  background:#DD8888;
+}
+tr.SV{
+  background:#DD3333;
+}
+tr.NC{
+  background:#88aa88;
+}
+tr.CE{
+  background:#EECCEE;
+}
+tr.NS{
+  background:#dddddd;
+}
+tr.CP{
+  background:#99dd99;
+}
+tr.FL{
+  background:#EEAAEE;
+}
+tr.NT{
+  background:#dddddd;
+}

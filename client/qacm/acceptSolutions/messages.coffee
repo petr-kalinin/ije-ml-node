@@ -115,3 +115,70 @@ export addMessageDetailsTable = (data, m) ->
     data[qLANG.Points] = m["points"]
     if m.tests
         data[qLANG.SuccessfullTests] = m["tests"]
+
+export class AddMessageDetails extends React.Component
+    constructor: (props) ->
+        super(props)
+        @useToken = @useToken.bind this
+
+    useToken: () ->
+        @TODO
+
+    render: () ->
+        m = @props.message
+        <div>
+            {m.canUseToken && <p><a href="#" onClick={@useToken}>{qLANG.UseToken}</a></p>}
+            {m.testres && <table className={styles.dtests} cellSpacing="0"><tbody>
+                {m.testres.map((t)->
+                    res=xmlToOutcome[t.outcome] 
+                    <tr className={res} key={t.id}>
+                    <td className={styles.testid}>
+                        {t.id}
+                    </td>
+                    <td className={styles.doutcome}>
+                        <font color={textColor[res]}><b><abbr title={LTEXT[res]}>{res}</abbr></b></font>
+                    </td>
+                    <td className={styles.dpoints}>{t.points} / {t["max-points"]}</td>
+                    <td className={styles.dcomment}>
+                        <div className={styles.dataNoBorder}>
+                            <pre className={styles.data}>{t.comment}</pre>
+                        </div>
+                    </td>
+                    </tr>
+                )}
+            </tbody></table>
+            }           
+        </div>
+
+###     
+writeln("<h2>".$lang["Testing details"]."</h2>");
+$path=$mlcfg['ije-dir']."\\".$cfg["outputs-path"]."\\".$m["problem"]."\\".$m["filename"];
+$probpath=$mlcfg['ije-dir']."\\".$cfg["problems-path"]."\\".$m["problem"]."\\problem.xml";
+loadxml($probpath, $probdata, "windows-1251"); $probdata=reset($probdata); $probdata=$probdata["judging"]["script"]["testset"];
+writeln($lang["Program:"]);
+writeDataFile($path."\\".$m["filename"].".".$m["language-id"], 1024*1024);
+writeln($lang["Compile log:"]);
+writeDataFile($path."\\compile.log");
+if ($acms["showcomments"]=="true") {
+   if (!in_array($m["testres"][1]["outcome"],array("compilation-error","not-tested"))) {
+      foreach ($m["testres"] as $n=>$t){
+        if ($n>1) writeln("<hr>");
+        $res=array_search($t["outcome"],$xmltext);
+        writeln("<h3><a name=\"test$n\"</a>".$lang["Test"]." $n: | ");
+        write("<font color={$TextColor[$res]}><b><abbr title=\"$ltext[$res]\">$res</abbr></b></font> | ");
+        writeln("$t[points] / {$t["max-points"]} </h3> ");
+        writeln($lang["Input:"]);
+        $inf = makeTestFileName($probdata["input-href"], $n);
+        writeDataFile($path."\\".$inf);
+        writeln($lang["ProgramOutput:"]);
+        writeDataFile($path."\\".$inf.".out");
+        writeln($lang["CorrectAnswer:"]);
+        $ans = makeTestFileName($probdata["answer-href"], $n);
+        writeDataFile($path."\\".$ans);
+        writeln($lang["CheckerComment:"]);
+        writeDataText($t["comment"]);
+      }
+   }
+}
+
+###
