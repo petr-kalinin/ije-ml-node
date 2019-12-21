@@ -93,6 +93,10 @@ api.get '/contestData/:id', wrap (req, res) ->
         problems: cc.problems
         qacm: ac["acm-contest"][+contestId]["qacm-dll"]
         calculatePoints: cc["calculate-points"] == "true"
+        parties: {}
+    for key, party of cc.parties
+        result.parties[key] = 
+            name: party.name
     qResult = qacmData(cc)
     result = {result..., qResult...}
     res.json(result)
@@ -123,6 +127,18 @@ api.get '/messages/:contestId', wrap (req, res) ->
     result = qacm.makeMessages(cc, m, req.session.username)
     res.json(result)
 
+api.get '/message/:contestId/:messageId', wrap (req, res) ->
+    contestId = +req.params.contestId
+    if contestId != req.session.contest
+        res.status(403).send("No permission")
+        return
+    ac = await acmConfig()
+    cc = await contestConfig(contestId)
+    m = await monitor(contestId)
+    qacmDll = ac["acm-contest"][contestId]["qacm-dll"]
+    qacm = getQacm(qacmDll).messages
+    result = qacm.makeMessage(cc, m, req.session.username, +req.params.messageId)
+    res.json(result)
 
 api.all /\/.*/, wrap (req, res) ->
     res.status(404).send("Not found")
