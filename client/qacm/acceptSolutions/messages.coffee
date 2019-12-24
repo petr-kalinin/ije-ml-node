@@ -2,7 +2,7 @@ React = require('react')
 
 import styles from './messages.css'
 import qLANG from './lang'
-import {LTEXT} from '../../lib/lang'
+import LANG, {LTEXT} from '../../lib/lang'
 import {xmlToOutcome, textColor} from '../../lib/ijeConsts'
 
 getMyRow = (standings, username) ->
@@ -116,6 +116,14 @@ export addMessageDetailsTable = (data, m) ->
     if m.tests
         data[qLANG.SuccessfullTests] = m["tests"]
 
+DataFile = (props) ->
+    text = props.text
+    if not text?
+        text = qLANG.FileNonFoundProbablyNotCreated
+    if text == ""
+        text = " "
+    <div className={styles.data}><pre className={styles.data}>{text}</pre></div>
+
 export class AddMessageDetails extends React.Component
     constructor: (props) ->
         super(props)
@@ -128,6 +136,7 @@ export class AddMessageDetails extends React.Component
         m = @props.message
         <div>
             {m.canUseToken && <p><a href="#" onClick={@useToken}>{qLANG.UseToken}</a></p>}
+            <p>{qLANG.ScrollToBottom}</p>
             {m.testres && <table className={styles.dtests} cellSpacing="0"><tbody>
                 {m.testres.map((t)->
                     res=xmlToOutcome[t.outcome] 
@@ -148,37 +157,28 @@ export class AddMessageDetails extends React.Component
                 )}
             </tbody></table>
             }           
+            <h2>{qLANG.TestingDetails}</h2>
+            <h3>{qLANG.Program}</h3>
+            <DataFile text={m.source}/>
+            <h3>{qLANG.CompileLog}</h3>
+            <DataFile text={m.compileLog}/>
+            {m.testres.map((t)->
+                res=xmlToOutcome[t.outcome] 
+                <div key={t.id}>
+                    <h3>{"#{LANG.Test} #{t.id} | "}
+                        <font color={textColor[res]}><b><abbr title={LTEXT[res]}>
+                            {res}
+                        </abbr></b></font>
+                        {" | #{t.points} / #{t["max-points"]}"}
+                    </h3>
+                    {qLANG.Input}
+                    <DataFile text={t.input}/>
+                    {qLANG.ProgramOutput}
+                    <DataFile text={t.output}/>
+                    {qLANG.CorrectAnswer}
+                    <DataFile text={t.answer}/>
+                    {qLANG.CheckerComment}
+                    <DataFile text={t.comment}/>
+                </div>
+            )}
         </div>
-
-###     
-writeln("<h2>".$lang["Testing details"]."</h2>");
-$path=$mlcfg['ije-dir']."\\".$cfg["outputs-path"]."\\".$m["problem"]."\\".$m["filename"];
-$probpath=$mlcfg['ije-dir']."\\".$cfg["problems-path"]."\\".$m["problem"]."\\problem.xml";
-loadxml($probpath, $probdata, "windows-1251"); $probdata=reset($probdata); $probdata=$probdata["judging"]["script"]["testset"];
-writeln($lang["Program:"]);
-writeDataFile($path."\\".$m["filename"].".".$m["language-id"], 1024*1024);
-writeln($lang["Compile log:"]);
-writeDataFile($path."\\compile.log");
-if ($acms["showcomments"]=="true") {
-   if (!in_array($m["testres"][1]["outcome"],array("compilation-error","not-tested"))) {
-      foreach ($m["testres"] as $n=>$t){
-        if ($n>1) writeln("<hr>");
-        $res=array_search($t["outcome"],$xmltext);
-        writeln("<h3><a name=\"test$n\"</a>".$lang["Test"]." $n: | ");
-        write("<font color={$TextColor[$res]}><b><abbr title=\"$ltext[$res]\">$res</abbr></b></font> | ");
-        writeln("$t[points] / {$t["max-points"]} </h3> ");
-        writeln($lang["Input:"]);
-        $inf = makeTestFileName($probdata["input-href"], $n);
-        writeDataFile($path."\\".$inf);
-        writeln($lang["ProgramOutput:"]);
-        writeDataFile($path."\\".$inf.".out");
-        writeln($lang["CorrectAnswer:"]);
-        $ans = makeTestFileName($probdata["answer-href"], $n);
-        writeDataFile($path."\\".$ans);
-        writeln($lang["CheckerComment:"]);
-        writeDataText($t["comment"]);
-      }
-   }
-}
-
-###

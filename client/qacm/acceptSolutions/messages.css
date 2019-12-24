@@ -4,138 +4,138 @@ div.sort{
     text-align:right;
     padding-bottom:5px;
     padding-top:5px;
-  }
-  font.ProbFull{
-    color:green;
-    font-weight:bold;
-  }
-  font.probinfo{
-    font-size:80%;
-    font-weight:normal;
-  }
-  td.time,td.prob,td.points,td.stests,td.firstWA,td.comment,td.token{
-    border-bottom:1px solid #220055;
-  }
-  td.time,td.time_{
-    width:60px;
-    padding-left:10px;
-  }
-  td.prob,td.prob_{
-    width:80px;
-  }
-  td.points,td.points_{
-    width:100px;
-  }
-  td.stests,td.stests_{
-    width:120px;
-  }
-  td.firstWA,td.firstWA_{
-    width:300px;
-  }
-  td.comment,td.comment_{
-  }
-  td.token {
-    width:150px;
-  }
-  table.tests,table.tests_{
-    width:100%;
-  }
-  table.msgdetails td.msgleft{
-    padding-right:20px;
-  }
-  table.dtests{
-    width:100%;
-    border:1px solid #220055;
-    border-top:none;
-    font-size:90%;
-    table-layout:fixed;
-  }
-  table.dtests td{
-    padding:0px;
-    padding-top:2px;
-    padding-bottom:4px;
-    border-top:1px solid #220055;
-  }
-  table.dtests td.testid{
-    width:30px;
-    padding-left:10px;
-  }
-  table.dtests td.doutcome{
-    width:40px;
-  }
-  table.dtests td.dpoints{
-    width:80px;
-  }
-  tr.OK{
-     background:#BBEEBB;
-  }
-  tr.WA{
-     background:#EEBBBB;
-  }
-  tr.PE{
-     background:#BBEEEE;
-  }
-  tr.TL,tr.ML,tr.OL,tr.IL{
-     background:#BBBBEE;
-  }
-  tr.RE,tr.CR{
-     background:#DD8888;
-  }
-  tr.SV{
-     background:#DD3333;
-  }
-  tr.NC{
-     background:#88aa88;
-  }
-  tr.CE{
-     background:#EECCEE;
-  }
-  tr.NS{
-     background:#dddddd;
-  }
-  tr.CP{
-     background:#99dd99;
-  }
-  tr.FL{
-     background:#EEAAEE;
-  }
-  tr.NT{
-     background:#dddddd;
-  }
-  td.nosubmissions{
-    font-style:italic;
-    text-align:center;
-    font-size:90%;
-  }
-  div.data{
-    border:1px solid #220055;
-    max-height: 20ex; 
-  }
-  div.data,div.dataNoBorder{
-    width:100%;
-    overflow: auto;
-    overflow-x: auto;
-    padding:0px;
-    margin:0px;
-  }
-  pre{
-    margin:2px;
-  }
-  table.tokens{
-    background:#220055;
-    margin-bottom:15px;
-    border:0px;
-  }
-  table.tokens td{
-    background:#fbf8ff;
-    padding-right:15px;
-    padding-left:15px;
-  }
-  p.tokens{
-    margin-bottom:3px;
-  }
-  span.tokensRemaining{
-    font-size:90%;
-    font-weight:normal;
-    padding-left:50px;
-  }
+}
+font.ProbFull{
+  color:green;
+  font-weight:bold;
+}
+font.probinfo{
+  font-size:80%;
+  font-weight:normal;
+}
+td.time,td.prob,td.points,td.stests,td.firstWA,td.comment,td.token{
+  border-bottom:1px solid #220055;
+}
+td.time,td.time_{
+  width:60px;
+  padding-left:10px;
+}
+td.prob,td.prob_{
+  width:80px;
+}
+td.points,td.points_{
+  width:100px;
+}
+td.stests,td.stests_{
+  width:120px;
+}
+td.firstWA,td.firstWA_{
+  width:300px;
+}
+td.comment,td.comment_{
+}
+td.token {
+  width:150px;
+}
+table.tests,table.tests_{
+  width:100%;
+}
+table.msgdetails td.msgleft{
+  padding-right:20px;
+}
+table.dtests{
+  width:100%;
+  border:1px solid #220055;
+  border-top:none;
+  font-size:90%;
+  table-layout:fixed;
+}
+table.dtests td{
+  padding:0px;
+  padding-top:2px;
+  padding-bottom:4px;
+  border-top:1px solid #220055;
+}
+table.dtests td.testid{
+  width:30px;
+  padding-left:10px;
+}
+table.dtests td.doutcome{
+  width:40px;
+}
+table.dtests td.dpoints{
+  width:80px;
+}
+tr.OK{
+    background:#BBEEBB;
+}
+tr.WA{
+    background:#EEBBBB;
+}
+tr.PE{
+    background:#BBEEEE;
+}
+tr.TL,tr.ML,tr.OL,tr.IL{
+    background:#BBBBEE;
+}
+tr.RE,tr.CR{
+    background:#DD8888;
+}
+tr.SV{
+    background:#DD3333;
+}
+tr.NC{
+    background:#88aa88;
+}
+tr.CE{
+    background:#EECCEE;
+}
+tr.NS{
+    background:#dddddd;
+}
+tr.CP{
+    background:#99dd99;
+}
+tr.FL{
+    background:#EEAAEE;
+}
+tr.NT{
+    background:#dddddd;
+}
+td.nosubmissions{
+  font-style:italic;
+  text-align:center;
+  font-size:90%;
+}
+div.data{
+  border:1px solid #220055;
+  max-height: 20ex; 
+}
+div.data,div.dataNoBorder{
+  width:100%;
+  overflow: auto;
+  overflow-x: auto;
+  padding:0px;
+  margin:0px;
+}
+pre{
+  margin:2px;
+}
+table.tokens{
+  background:#220055;
+  margin-bottom:15px;
+  border:0px;
+}
+table.tokens td{
+  background:#fbf8ff;
+  padding-right:15px;
+  padding-left:15px;
+}
+p.tokens{
+  margin-bottom:3px;
+}
+span.tokensRemaining{
+  font-size:90%;
+  font-weight:normal;
+  padding-left:50px;
+}
