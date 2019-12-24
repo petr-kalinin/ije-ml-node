@@ -1,3 +1,5 @@
+sprintf = require('sprintf-js').sprintf
+
 xmltext =
     'OK' : 'accepted',                 
     'WA' : 'wrong-answer',             
@@ -72,7 +74,7 @@ export subs = (s, s1, s2, s3) ->
     i1 = 0
     i2 = 0
     i3 = 0
-    for i in [0..s.length] 
+    for i in [0...s.length] 
         switch s[i]
             when '@'
                 if i1 >= s1.length
@@ -97,12 +99,12 @@ export makeTestFileName = (fmt, number) ->
     s = {1: "", 2: ""}
     p = 1
     nn = 0
-    for i in [0..fmt.length] 
+    for i in [0...fmt.length] 
         if fmt[i] == '#'
             nn++
             if p == 1 
                 p = 2
         else
             s[p] += fmt[i]
-    ff = "#{s[1]}%0#{nn}d#{s[2]}"
+    ff = "#{s['1']}%0#{nn}d#{s['2']}"
     return sprintf(ff, number)

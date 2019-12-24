@@ -1,7 +1,6 @@
 xml2js = require('xml2js')
-fs = require('fs')
-iconv = require('iconv-lite')
 
+import loadFile from './loadFile'
 import logger from '../log'
 
 extractTop = (data) ->
@@ -56,15 +55,6 @@ export parseXml = (xml) ->
                 reject err
             else
                 resolve correctParsedXml(result)
-
-export loadFile = (filename) ->
-    return new Promise (resolve, reject) ->
-        fs.readFile filename, (err, data) ->
-            if err
-                reject err
-            else
-                data = iconv.decode(data, "windows-1251")
-                resolve data
 
 export default parseXmlFile = (filename) ->
     return await parseXml(await loadFile(filename))

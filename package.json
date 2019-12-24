@@ -85,6 +85,7 @@
     "save": "^2.4.0",
     "sha256": "^0.2.0",
     "source-map-support": "^0.5.13",
+    "sprintf-js": "^1.1.2",
     "tinycolor2": "^1.4.1",
     "universal-cookie": "^4.0.2",
     "vinyl-source-stream": "^2.0.0",

@@ -1,10 +1,50 @@
 import {LTEXT} from '../../../client/lib/lang'
-import {xmlToOutcome} from '../../../client/lib/ijeConsts'
+import {xmlToOutcome, makeTestFileName} from '../../../client/lib/ijeConsts'
+import LoadableConfig from '../../lib/LoadableConfig'
+import mlConfig from '../../mlConfig'
+import ijeConfig from '../../data/ijeConfig'
+import problemConfig from '../../data/problemConfig'
+import loadFile from '../../lib/loadFile'
+import logger from '../../log'
+import awaitAll from '../../../client/lib/awaitAll'
 
 hasTests = (s) ->
   return not (s[1]["outcome"] in ["compilation-error","not-tested"])
 
-formMessage = (cc, m, problemRow, s, isAdmin) ->
+makeFileData = (problem, filename) ->
+    mlcfg = mlConfig
+    cfg = await ijeConfig()
+    path="#{mlcfg['ije_dir']}/#{cfg['outputs-path']}/#{problem}/#{filename}"
+    probCfg = await problemConfig(problem)
+    probdata = probCfg.judging.script.testset
+    return {path, probdata}
+
+loadAndTrimFile = (filename, maxlen) ->
+    try
+        text = await loadFile(filename)
+    catch e
+        logger.error "Can not find file #{filename}"
+        return null
+    if len(text) > maxlen
+        text = text.substr(maxlen) + "\n<...>"
+    text
+
+addSourceAndCompileLog = (result, fileData) ->
+    {path, probdata} = fileData
+    result.source = await loadAndTrimFile("#{path}/#{result.filename}.#{result['language-id']}", 1024*1024)
+    result.compileLog = await loadAndTrimFile("#{path}/compile.log")
+
+addFiles = (test, fileData) ->
+    {path, probdata} = fileData
+    id = test.id
+    inf = makeTestFileName(probdata["input-href"], id)
+    test.input = await loadAndTrimFile("#{path}/#{inf}")
+    test.output = await loadAndTrimFile("#{path}/#{inf}.out")
+    ans = makeTestFileName(probdata["answer-href"], id)
+    test.answer = await loadAndTrimFile("#{path}/#{ans}")
+
+formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
+    shouldAddFiles = shouldAddFiles and (cc["showcomments"] == "true")
     result = {}
     tokenused = s["token-used-time"] >= 0 or +cc["token-period"] < 0 or s[1]["outcome"] == "compilation-error" or cc["show-full-results"]=="true" or isAdmin
     result.id = s.id
@@ -19,6 +59,11 @@ formMessage = (cc, m, problemRow, s, isAdmin) ->
     result.problem = s.problem
     result["filename"] = s["filename"]
     result["language-id"] = s["language-id"]
+
+    if shouldAddFiles
+        fileData = await makeFileData(s.problem, s.filename)
+        await addSourceAndCompileLog(result, fileData)
+
     if cc["showtests"] == "true"
         nn = 0
         result["testres"] = []
@@ -30,6 +75,8 @@ formMessage = (cc, m, problemRow, s, isAdmin) ->
                     outcome = xmlToOutcome[test.outcome]
                     test["comment"] = LTEXT[outcome]
                     test["eval-comment"] = undefined
+                else if shouldAddFiles
+                    await addFiles(test, fileData)
                 nn++
                 result["testres"].push(test)
             if (hasTests(s))
@@ -60,6 +107,7 @@ export makeMessages = (cc, m, currentUser) ->
                     continue
                 result.push formMessage(cc, m, problemRow, row, isAdmin)
 
+    result = await awaitAll result
     result.sort (a, b) -> +a.id - b.id
     return result
 
@@ -73,6 +121,6 @@ export makeMessage = (cc, m, currentUser, messageId) ->
         for problemId, _ of m.problems
             for _, row of problemRow[problemId]
                 if +row.id == messageId
-                    return formMessage(cc, m, problemRow, row, isAdmin)
+                    return await formMessage(cc, m, problemRow, row, isAdmin, true)
     return {}
 

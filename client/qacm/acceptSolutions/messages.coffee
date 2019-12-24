@@ -171,12 +171,20 @@ export class AddMessageDetails extends React.Component
                         </abbr></b></font>
                         {" | #{t.points} / #{t["max-points"]}"}
                     </h3>
-                    {qLANG.Input}
-                    <DataFile text={t.input}/>
-                    {qLANG.ProgramOutput}
-                    <DataFile text={t.output}/>
-                    {qLANG.CorrectAnswer}
-                    <DataFile text={t.answer}/>
+                    {t.input && <div>
+                        {qLANG.Input}
+                        <DataFile text={t.input}/>
+                    </div>
+                    }
+                    {t.output && <div>
+                        {qLANG.ProgramOutput}
+                        <DataFile text={t.output}/>
+                    </div>
+                    }
+                    {t.answer && <div>
+                        {qLANG.CorrectAnswer}
+                        <DataFile text={t.answer}/>
+                    </div>}
                     {qLANG.CheckerComment}
                     <DataFile text={t.comment}/>
                 </div>

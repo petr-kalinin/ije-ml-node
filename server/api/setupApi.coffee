@@ -124,7 +124,7 @@ api.get '/messages/:contestId', wrap (req, res) ->
     m = await monitor(contestId)
     qacmDll = ac["acm-contest"][contestId]["qacm-dll"]
     qacm = getQacm(qacmDll).messages
-    result = qacm.makeMessages(cc, m, req.session.username)
+    result = await qacm.makeMessages(cc, m, req.session.username)
     res.json(result)
 
 api.get '/message/:contestId/:messageId', wrap (req, res) ->
@@ -137,7 +137,7 @@ api.get '/message/:contestId/:messageId', wrap (req, res) ->
     m = await monitor(contestId)
     qacmDll = ac["acm-contest"][contestId]["qacm-dll"]
     qacm = getQacm(qacmDll).messages
-    result = qacm.makeMessage(cc, m, req.session.username, +req.params.messageId)
+    result = await qacm.makeMessage(cc, m, req.session.username, +req.params.messageId)
     res.json(result)
 
 api.all /\/.*/, wrap (req, res) ->
