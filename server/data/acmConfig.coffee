@@ -14,7 +14,11 @@ makeContestConfig = (c) ->
     filename = mlConfig.ije_dir + "/" + c.settings
     load = () ->
         logger.info "Loading ", filename
-        await parseXmlFile(filename)
+        data = await parseXmlFile(filename)
+        for key, value of data
+            if typeof value == 'string'
+                data[key] = data[key].replace(/\\/g, "/")
+        return data
     return new LoadableConfig(load)
 
 _acmConfig = new LoadableConfig(load)

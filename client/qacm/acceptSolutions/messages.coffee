@@ -5,6 +5,7 @@ import qLANG from './lang'
 import LANG, {LTEXT} from '../../lib/lang'
 import {xmlToOutcome, textColor} from '../../lib/ijeConsts'
 import callApi from '../../lib/callApi'
+import withMe from '../../lib/withMe'
 
 getMyRow = (standings, username) ->
     for row in standings
@@ -19,7 +20,7 @@ class UseToken extends React.Component
         @useToken = @useToken.bind(this)
 
     useToken: () ->
-        callApi "useToken/#{@props.id}", {}
+        callApi "useToken/#{@props.me.contest}/#{@props.id}", {}
         @setState
             sent: true
 
@@ -28,6 +29,8 @@ class UseToken extends React.Component
             <a href="#" onClick={@useToken}>{qLANG.UseToken}</a>
         else
             qLANG.TokenRequestSent
+
+UseToken = withMe(UseToken)
 
 export GlobalHeader = (props) -> 
     if props.contestData.tokenPeriod < 0

@@ -1,11 +1,12 @@
 express = require('express')
 
+import mlConfig from '../mlConfig'
 import acmConfig, {contestConfig} from '../data/acmConfig'
 import monitor from '../data/monitor'
 import ijeConfig from '../data/ijeConfig'
-import mlConfig from '../mlConfig'
 import logger from '../log'
 import getQacm from '../qacm/getQacm'
+import writeFile from '../lib/writeFile'
 
 api = express.Router()
 
@@ -140,8 +141,29 @@ api.get '/message/:contestId/:messageId', wrap (req, res) ->
     result = await qacm.makeMessage(cc, m, req.session.username, +req.params.messageId)
     res.json(result)
 
+api.post '/useToken/:contestId/:id', wrap (req, res) ->
+    contestId = +req.params.contestId
+    id = +req.params.id
+    if contestId != req.session.contest
+        res.status(403).send("No permission")
+        return
+    cc = await contestConfig(contestId)
+    m = await monitor(contestId)
+    fname = null
+    for _, problemRow of m.parties[req.session.username]
+        if not problemRow.id
+            continue
+        for _, submitRow of problemRow
+            if +submitRow.id == id
+                fname = submitRow.filename
+    if not fname
+        res.status(403).send("No permission")
+        return
+    fpath = "#{mlConfig['ije_dir']}/#{cc["token-request-path"]}#{fname}.token"
+    await writeFile(fpath, '')
+    res.json({used: true})
+
 api.all /\/.*/, wrap (req, res) ->
     res.status(404).send("Not found")
-
 
 export default api
