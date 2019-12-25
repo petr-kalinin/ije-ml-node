@@ -56,5 +56,6 @@ class Standings extends React.Component
 options =
     urls: (props) ->
         standings: "standings/#{props.me.contest}"
+    timeout: 10000
 
 export default withContestData(ConnectedComponent(Standings, options))

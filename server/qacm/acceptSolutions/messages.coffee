@@ -51,7 +51,7 @@ formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
     result.time = s.time
     result.party = s.party
     result.tokenUsed = tokenused
-    result.canUseToken = not tokenused and problemRow["token-wait-time"] == 0 and hasTests(s)
+    result.canUseToken = not tokenused and +(problemRow["token-wait-time"]) == 0 and hasTests(s)
     result.points= if tokenused then s.points else "?"
     result.full = result.points == s["max-points"]
     if s[1]["outcome"] == "not-tested"
@@ -98,14 +98,14 @@ export makeMessages = (cc, m, currentUser) ->
     showFull = (cc["show-full-results"] == "true")
     result = []
     isAdmin = cc.parties[currentUser]?.admin == "true"
-    for id, problemRow of m.parties
+    for id, partyRow of m.parties
         if (id != currentUser) and (not isAdmin)
             continue
         for problemId, _ of m.problems
-            for _, row of problemRow[problemId]
+            for _, row of partyRow[problemId]
                 if not (row.id?) 
                     continue
-                result.push formMessage(cc, m, problemRow, row, isAdmin)
+                result.push formMessage(cc, m, partyRow[problemId], row, isAdmin)
 
     result = await awaitAll result
     result.sort (a, b) -> +a.id - b.id
@@ -115,12 +115,12 @@ export makeMessage = (cc, m, currentUser, messageId) ->
     showFull = (cc["show-full-results"] == "true")
     result = []
     isAdmin = cc.parties[currentUser]?.admin == "true"
-    for id, problemRow of m.parties
+    for id,partyRow of m.parties
         if (id != currentUser) and (not isAdmin)
             continue
         for problemId, _ of m.problems
-            for _, row of problemRow[problemId]
+            for _, row of partyRow[problemId]
                 if +row.id == messageId
-                    return await formMessage(cc, m, problemRow, row, isAdmin, true)
+                    return await formMessage(cc, m, partyRow[problemId], row, isAdmin, true)
     return {}
 

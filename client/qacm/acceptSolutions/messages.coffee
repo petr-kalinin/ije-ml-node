@@ -4,12 +4,30 @@ import styles from './messages.css'
 import qLANG from './lang'
 import LANG, {LTEXT} from '../../lib/lang'
 import {xmlToOutcome, textColor} from '../../lib/ijeConsts'
+import callApi from '../../lib/callApi'
 
 getMyRow = (standings, username) ->
     for row in standings
         if row.id == username
             return row
 
+class UseToken extends React.Component
+    constructor: (props) ->
+        super(props)
+        @state = 
+            sent: false
+        @useToken = @useToken.bind(this)
+
+    useToken: () ->
+        callApi "useToken/#{@props.id}", {}
+        @setState
+            sent: true
+
+    render: () ->
+        if not @state.sent
+            <a href="#" onClick={@useToken}>{qLANG.UseToken}</a>
+        else
+            qLANG.TokenRequestSent
 
 export GlobalHeader = (props) -> 
     if props.contestData.tokenPeriod < 0
@@ -70,10 +88,6 @@ export AddHeader = (props) ->
 export class AddMessage extends React.Component
     constructor: (props) ->
         super(props)
-        @useToken = @useToken.bind(this)
-
-    useToken: () ->
-        # TODO
 
     render: () ->
         m = @props.message
@@ -105,7 +119,7 @@ export class AddMessage extends React.Component
         res.push <td className={styles.comment_} key="comment">{comment}</td>
         if @props.contestData.tokenPeriod >= 0
             res.push <td className={styles.token_}  key="token">
-                {m.canUseToken && <a href="#" onClick={@props.useToken}>{qLANG.UseToken}</a>}
+                {m.canUseToken && <UseToken id={m.id}/>}
             </td>
         res
 
@@ -127,15 +141,11 @@ DataFile = (props) ->
 export class AddMessageDetails extends React.Component
     constructor: (props) ->
         super(props)
-        @useToken = @useToken.bind this
-
-    useToken: () ->
-        @TODO
 
     render: () ->
         m = @props.message
         <div>
-            {m.canUseToken && <p><a href="#" onClick={@useToken}>{qLANG.UseToken}</a></p>}
+            {m.canUseToken && <p><UseToken id={m.id}/></p>}
             <p>{qLANG.ScrollToBottom}</p>
             {m.testres && <table className={styles.dtests} cellSpacing="0"><tbody>
                 {m.testres.map((t)->
