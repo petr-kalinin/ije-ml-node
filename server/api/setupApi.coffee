@@ -75,6 +75,7 @@ api.get '/contests', wrap (req, res) ->
 
 api.get '/contestData/:id', wrap (req, res) ->
     contestId = req.params.id
+    ic = await ijeConfig()
     ac = await acmConfig()
     cc = await contestConfig(+contestId)
     m = await monitor(+contestId)
@@ -95,9 +96,12 @@ api.get '/contestData/:id', wrap (req, res) ->
         qacm: ac["acm-contest"][+contestId]["qacm-dll"]
         calculatePoints: cc["calculate-points"] == "true"
         parties: {}
+        languages: {}
     for key, party of cc.parties
         result.parties[key] = 
             name: party.name
+    for key, lang of ic.languages
+        result.languages[key] = lang.name
     qResult = qacmData(cc)
     result = {result..., qResult...}
     res.json(result)

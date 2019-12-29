@@ -9,6 +9,7 @@ import {
 import Index from './components/Index'
 import Login from './components/Login'
 import ChangeContest from './components/ChangeContest'
+import Submit from './components/Submit'
 import Standings from './components/Standings'
 import Messages from './components/Messages'
 import MessageDetails from './components/MessageDetails'
@@ -34,6 +35,12 @@ export default [
         component: ChangeContest,
         key: "/changeContest"
         path: "/changeContest"
+        exact: true
+    },
+    {
+        component: Submit,
+        key: "/submit"
+        path: "/submit"
         exact: true
     },
     {
