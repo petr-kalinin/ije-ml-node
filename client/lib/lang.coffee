@@ -63,6 +63,7 @@ export default LANG =
     SelectTheProblemFirst: "Выберите задачу"
     SelectTheLanguageFirst: "Выберите язык"
     Submit: "Сдать решение"
+    SubmitAnother: "Отправить еще одно решение"
     ErrorUploadedFile: "An error occured while moving uploaded file"
     SubmitFailed: "Не удалось послать решение на проверку"
     NoResponseFromIJE: 'IJE не отвечает'

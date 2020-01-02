@@ -19,6 +19,7 @@ class SubmitForm extends React.Component
             prob_id: '_no'
             code: ''
         @setField = @setField.bind(this)
+        @resetForm = @resetForm.bind(this)
         @submit = @submit.bind(this)
 
     setField: (field, value) ->
@@ -32,6 +33,14 @@ class SubmitForm extends React.Component
         else  # file input is not controlled
             newState[field] = value
         @setState(newState)
+    
+    resetForm: () ->
+        @setState
+            lang_id: '_no'
+            prob_id: '_no'
+            code: ''
+            submit: undefined
+
 
     submit: (event) ->
         event.preventDefault()
@@ -145,6 +154,12 @@ class SubmitForm extends React.Component
             <h1>{LANG.SubmitFailed}</h1>
             {@state.submit.message}
             </div>
+        }
+        {
+        if @state.submit? and not @state.submit?.loading
+            <p>
+            <a href="#" onClick={@resetForm}>{LANG.SubmitAnother}</a>
+            </p>
         }
         </div>
 
