@@ -1,4 +1,6 @@
 express = require('express')
+iconv = require("iconv-lite")
+fs = require('fs-extra')
 
 import mlConfig from '../mlConfig'
 import acmConfig, {contestConfig} from '../data/acmConfig'
@@ -7,6 +9,8 @@ import ijeConfig from '../data/ijeConfig'
 import logger from '../log'
 import getQacm from '../qacm/getQacm'
 import writeFile from '../lib/writeFile'
+import {gettaskinfo, subs} from '../../client/lib/ijeConsts'
+import sleep from '../lib/sleep'
 
 api = express.Router()
 
@@ -144,6 +148,42 @@ api.get '/message/:contestId/:messageId', wrap (req, res) ->
     qacm = getQacm(qacmDll).messages
     result = await qacm.makeMessage(cc, m, req.session.username, +req.params.messageId)
     res.json(result)
+
+api.post '/submit', wrap (req, res) ->
+    contestId = +req.body.contest
+    problem = req.body.problem
+    lang = req.body.language
+    code = req.body.code
+    if contestId != req.session.contest
+        res.status(403).send("No permission")
+        return
+    ic = await ijeConfig()
+    ac = await acmConfig()
+    cc = await contestConfig(contestId)
+    mlcfg = mlConfig
+    if not (problem of cc.problems) or not (lang of ic.languages)
+        res.status(403).send("No permission2")
+        return
+    {d: nd, p: np} = gettaskinfo(ic, problem)
+    fnew = subs(ic["solutions-format"], req.session.username, nd, np)
+    fpath = "#{mlcfg["ije_dir"]}/#{ic["acm-register-solutions-path"]}#{fnew}.#{lang}"
+    code = iconv.decode(new Buffer(code), "latin1")
+    console.log "Will save solution to #{fpath}: #{code}"
+    await writeFile(fpath, code)
+    reppath = "#{mlcfg["ije_dir"]}/#{ac["reports-path"]}#{fnew}.xml";
+    console.log "Will expect report at ", reppath
+    attempts = 0
+    while (not await fs.pathExists(reppath)) and attempts < 10
+        await sleep(500)
+        attempts++
+    if not await fs.pathExists(reppath)
+        console.log "No report created"
+        await fs.remove(fpath)
+        res.json({error: "no_response"})
+        return
+    await sleep(500)
+    await fs.remove(reppath)
+    res.json({submit: true})
 
 api.post '/useToken/:contestId/:id', wrap (req, res) ->
     contestId = +req.params.contestId

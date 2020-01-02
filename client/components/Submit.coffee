@@ -43,12 +43,13 @@ class SubmitForm extends React.Component
         @setState(newState)
         try
             if @state.code 
-                code = Array.from(@state.code)
+                code = @state.code
             else
                 fileName = document.getElementById("file").files[0]
                 fileText = await PromiseFileReader.readAsArrayBuffer(fileName)
                 code = Array.from(new Uint8Array(fileText))
             dataToSend =
+                contest: @props.me.contest
                 language: @state.lang_id
                 problem: @state.prob_id
                 code: code 
