@@ -1,12 +1,14 @@
 React = require('react')
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import LANG from '../lib/lang'
 import getQacm from '../qacm/getQacm'
 
-
 import withContestData from '../lib/withContestData'
 import ConnectedComponent from '../lib/ConnectedComponent'
+
+import * as actions from '../redux/actions'
 
 import styles from './Messages.css'
 
@@ -38,16 +40,6 @@ NoSubmissions = (props) ->
 class Messages extends React.Component
     constructor: (props) ->
         super(props)
-        @state =
-            sortByTime: true
-        @setSort = @setSort.bind this
-
-    setSort: (sort) ->
-        (e) =>
-            e.preventDefault()
-            @setState
-                sortByTime: sort
-            return false
     
     render: () ->
         qacm = getQacm(@props.contestData.qacm).messages
@@ -63,11 +55,11 @@ class Messages extends React.Component
             {qacm.hasMessageDetails() && <font className={styles.msgdetails}>{LANG.ClickOnMessageTime}</font>}
             <div className={styles.sort}>
                 {LANG.SortBy} {" "}
-                {@state.sortByTime && <b>{LANG.time}</b> || <a href="#" onClick={@setSort(true)}>{LANG.time}</a>}
+                {@props.messagesSort && <b>{LANG.time}</b> || <a href="#" onClick={@props.switchMessagesSort(true)}>{LANG.time}</a>}
                 {" / "}
-                {not @state.sortByTime && <b>{LANG.problem}</b> || <a href="#" onClick={@setSort(false)}>{LANG.problem}</a>}
+                {not @props.messagesSort && <b>{LANG.problem}</b> || <a href="#" onClick={@props.switchMessagesSort(false)}>{LANG.problem}</a>}
             </div>
-            {if @state.sortByTime
+            {if @props.messagesSort
                 <table className={styles.tests} cellSpacing="0"><tbody>
                 <TableHeader me={@props.me} qacm={qacm} contestData={@props.contestData}/>
                 {@props.messages.map((m) => <MessageLine message={m} me={@props.me} qacm={qacm} contestData={@props.contestData} handleReload={@props.handleReload} key={m.id}/>)}
@@ -111,4 +103,12 @@ options =
         standings: "standings/#{props.me.contest}"
     timeout: 10000
 
-export default withContestData(ConnectedComponent(Messages, options))
+mapStateToProps = (state) ->
+    return
+        messagesSort: state.messagesSort
+
+mapDispatchToProps = (dispatch, ownProps) ->
+    return
+        switchMessagesSort: (newSort) -> () -> dispatch(actions.switchMessagesSort(newSort))
+
+export default connect(mapStateToProps, mapDispatchToProps)(withContestData(ConnectedComponent(Messages, options)))

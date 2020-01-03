@@ -3,7 +3,7 @@ import { ActionType } from 'redux-promise-middleware'
 
 import {reducer as notifications} from 'react-notification-system-redux';
 
-import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES } from './actions'
+import { GET_DATA, INVALIDATE_DATA, INVALIDATE_ALL_DATA, SAVE_DATA_PROMISES, SWITCH_MESSAGES_SORT } from './actions'
 
 import { equalUrl } from './getters'
 
@@ -44,10 +44,17 @@ dataPromises = (state=[], action) ->
 
 clientCookie = (state = null, action) -> state
 
+messagesSort = (state = true, action) ->
+    if action.type == SWITCH_MESSAGES_SORT
+        return action.value
+    else
+        return state
+
 export default rootReducer =
     combineReducers {
         data,
         dataPromises,
         notifications,
-        clientCookie
+        clientCookie,
+        messagesSort
     }

@@ -8,6 +8,7 @@ export INVALIDATE_ALL_DATA = 'INVALIDATE_ALL_DATA'
 export SAVE_DATA_PROMISES = 'SAVE_DATA_PROMISES'
 export LOGOUT = 'LOGOUT'
 export LOGIN = 'POST_LOGIN'
+export SWITCH_MESSAGES_SORT = 'SWITCH_MESSAGES_SORT'
 
 export updateData = (url, minAgeToUpdate, cookies) ->
     (dispatch, getState) ->
@@ -45,3 +46,8 @@ export logout = () ->
     (dispatch) ->
         await callApi 'logout', {}
         dispatch(invalidateAllData())
+
+export switchMessagesSort = (newSort) ->
+    return 
+        type: SWITCH_MESSAGES_SORT
+        value: newSort

@@ -18,7 +18,15 @@ import Sceleton from './components/Sceleton'
 
 preloadedState = window.__PRELOADED_STATE__
 delete window.__PRELOADED_STATE__
+if localStorage.getItem("messagesSort")?
+    preloadedState.messagesSort = localStorage.getItem("messagesSort") == "true"
+
 window.store = createStore(preloadedState)
+
+window.store.subscribe(() ->
+    messagesSort = window.store.getState().messagesSort
+    localStorage.setItem("messagesSort", messagesSort)
+)
 
 ReactDOM.hydrate(
     <Provider store={window.store}>
