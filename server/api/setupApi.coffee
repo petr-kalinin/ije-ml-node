@@ -5,7 +5,7 @@ fileType = require('file-type')
 
 import mlConfig from '../mlConfig'
 import acmConfig, {contestConfig} from '../data/acmConfig'
-import monitor from '../data/monitor'
+import monitor, {reloadMonitor} from '../data/monitor'
 import ijeConfig from '../data/ijeConfig'
 import logger from '../log'
 import getQacm from '../qacm/getQacm'
@@ -205,6 +205,7 @@ api.post '/submit', wrap (req, res) ->
         return
     await sleep(500)
     await fs.remove(reppath)
+    await reloadMonitor(contestId)
     logger.info "Successful submit"
     res.json({submit: true})
 

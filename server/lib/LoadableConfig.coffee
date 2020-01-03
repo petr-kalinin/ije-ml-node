@@ -15,6 +15,7 @@ export default class LoadableConfig
     reload: () ->
         @config = await @load()
         if @interval > 0
+            clearTimeout(@timeout)
             @timeout = setTimeout(@reload, @interval)
 
     get: () ->

@@ -22,3 +22,8 @@ export default monitor = (id) ->
     if not monitors
         monitors = ((await makeMonitor(i)) for _, i in ac["acm-contest"])
     await monitors[id].get()
+
+export reloadMonitor = (id) ->
+    if id < 0 or id >= monitors.length
+        throw "Wrong contest id #{id}"
+    await monitors[id].reload()
