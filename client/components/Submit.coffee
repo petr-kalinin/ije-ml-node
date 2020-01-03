@@ -69,7 +69,6 @@ class SubmitForm extends React.Component
                 data =
                     submit:
                         result: true
-                @props.reloadSubmitList()
             else if data.error == "no_response"
                 data = 
                     submit:
@@ -143,8 +142,8 @@ class SubmitForm extends React.Component
         {
         if @state.submit?.result
             <div>
-            <h1>LANG.SubmitSuccessfull</h1>
-            {LANG.YourSolutionHasBeen}<br/>;
+            <h1>{LANG.SubmitSuccessfull}</h1>
+            {LANG.YourSolutionHasBeen}<br/>
             {LANG.YouCanSee(<Link to="/messages">{LANG.Messages}</Link>)}
             </div>
         }

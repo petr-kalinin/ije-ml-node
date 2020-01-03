@@ -69,7 +69,7 @@ export default LANG =
     NoResponseFromIJE: 'IJE не отвечает'
     SubmitSuccessfull: "Решение успешно сдано"
     YourSolutionHasBeen: "Ваше решение было успешно послано на проверку. Удачи!"
-    YouCanSee: "Вы сможете просмотреть результаты тестирования на странице \"%s\""
+    YouCanSee: (x) -> <span>Вы сможете просмотреть результаты тестирования на странице {x}</span>
 
     AnErrorOccured: 'Ошибка'
     SelectTheProblem: "Выберите задачу"

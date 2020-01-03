@@ -1,3 +1,3 @@
 export default mlConfig = 
-    ije_dir: "../IJE_50_d"
-    dst: 0
+    ije_dir: "./ije"
+    dst: -3

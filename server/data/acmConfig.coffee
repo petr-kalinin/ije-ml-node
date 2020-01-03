@@ -12,6 +12,8 @@ load = () ->
     for key, value of data
         if typeof value == 'string'
             data[key] = data[key].replace(/\\/g, "/")
+    if not Array.isArray(data["acm-contest"])
+        data["acm-contest"] = [data["acm-contest"]]
     return data
 
 makeContestConfig = (c) ->

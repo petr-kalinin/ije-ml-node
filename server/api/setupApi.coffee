@@ -86,9 +86,9 @@ api.get '/contestData/:id', wrap (req, res) ->
     qacmDll = ac["acm-contest"][contestId]["qacm-dll"]
     qacmData = getQacm(qacmDll).contestData
     result =
-        start: cc.start
-        length: cc.length
-        time: m.time
+        start: +cc.start
+        length: +cc.length
+        time: +m.time
         status: m.status
         title: cc.title
         problemsCount: Object.keys(cc.problems).length
@@ -168,21 +168,22 @@ api.post '/submit', wrap (req, res) ->
     fnew = subs(ic["solutions-format"], req.session.username, nd, np)
     fpath = "#{mlcfg["ije_dir"]}/#{ic["acm-register-solutions-path"]}#{fnew}.#{lang}"
     code = iconv.decode(new Buffer(code), "latin1")
-    console.log "Will save solution to #{fpath}: #{code}"
+    logger.info "Submit #{req.session.username} #{problem} #{lang} -> will save solution to #{fpath}"
     await writeFile(fpath, code)
     reppath = "#{mlcfg["ije_dir"]}/#{ac["reports-path"]}#{fnew}.xml";
-    console.log "Will expect report at ", reppath
+    logger.info "Will expect report at ", reppath
     attempts = 0
     while (not await fs.pathExists(reppath)) and attempts < 10
         await sleep(500)
         attempts++
     if not await fs.pathExists(reppath)
-        console.log "No report created"
+        logger.error "No report created"
         await fs.remove(fpath)
         res.json({error: "no_response"})
         return
     await sleep(500)
     await fs.remove(reppath)
+    logger.info "Successful submit"
     res.json({submit: true})
 
 api.post '/useToken/:contestId/:id', wrap (req, res) ->
