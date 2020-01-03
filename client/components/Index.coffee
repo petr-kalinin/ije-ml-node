@@ -37,10 +37,10 @@ Index = (props) ->
 
     statements = {}
     if typeof props.contestData.statements == "string"
-        statements[props.contestData.title] = <a href='/statements' target="_blank">{LANG.Statements}</a>
+        statements[props.contestData.title] = <a href='/api/statements/0' target="_blank">{LANG.Statements}</a>
     else if props.contestData.statements
         for key, value of props.contestData.statements
-            statements[key] = <a href="/statements/#{key}" target="_blank">{props.contestData.problems[key].name}</a>
+            statements[key] = <a href="/api/statements/#{key}" target="_blank">{props.contestData.problems[key].name}</a>
 
     if Object.keys(statements).length
         res.push showstat("Statements", statements)

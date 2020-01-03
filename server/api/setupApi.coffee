@@ -1,6 +1,7 @@
 express = require('express')
 iconv = require("iconv-lite")
 fs = require('fs-extra')
+fileType = require('file-type')
 
 import mlConfig from '../mlConfig'
 import acmConfig, {contestConfig} from '../data/acmConfig'
@@ -9,6 +10,7 @@ import ijeConfig from '../data/ijeConfig'
 import logger from '../log'
 import getQacm from '../qacm/getQacm'
 import writeFile from '../lib/writeFile'
+import loadFile from '../lib/loadFile'
 import {gettaskinfo, subs} from '../../client/lib/ijeConsts'
 import sleep from '../lib/sleep'
 
@@ -23,6 +25,26 @@ wrap = (fn) ->
 
 api.get '/forbidden', wrap (req, res) ->
     res.status(403).send('No permissions')
+
+api.get '/statements/:id', wrap (req, res) ->
+    contest = req.session.contest
+    probId = req.params.id
+    if not contest?
+        res.status(403).send("No current contest")
+    cc = await contestConfig(contest)
+    m = await monitor(contest)
+    if m.time < 0
+        res.status(403).send("Contest not started yet")
+    if typeof cc.statements == "string"
+        filename = cc.statements
+    else
+        filename = cc.statements[probId]
+    if not filename
+        res.status(400).send("No statements")
+    text = await loadFile("#{mlConfig.ije_dir}/#{filename}", "raw")
+    mimeType = fileType(Buffer.from(text))?.mime || "text/plain"
+    res.status(200).contentType(mimeType).send(text)
+
 
 api.post '/setContest', wrap (req, res) ->
     if not req.body?.contest?
