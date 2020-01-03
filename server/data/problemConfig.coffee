@@ -10,10 +10,7 @@ makeProblemConfig = (problem) ->
     cfg = await ijeConfig()
     mlcfg = mlConfig
     filename = "#{mlcfg['ije_dir']}/#{cfg['problems-path']}#{problem}/problem.xml"
-    load = () ->
-        logger.info "Loading ", filename
-        await parseXmlFile(filename)
-    return new LoadableConfig(load)
+    return new LoadableConfig(filename)
 
 configs = {}
 

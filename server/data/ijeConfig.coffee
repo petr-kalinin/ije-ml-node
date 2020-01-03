@@ -5,16 +5,9 @@ import LoadableConfig from '../lib/LoadableConfig'
 
 import logger from '../log'
 
-load = () ->
-    filename = mlConfig.ije_dir + "/ije_cfg.xml"
-    logger.info "Loading ", filename
-    data = await parseXmlFile(filename)
-    for key, value of data
-        if typeof value == 'string'
-            data[key] = data[key].replace(/\\/g, "/")
-    return data
+_filename = mlConfig.ije_dir + "/ije_cfg.xml"
 
-_ijeConfig = new LoadableConfig(load)
+_ijeConfig = new LoadableConfig(_filename)
 
 ijeConfig = () ->
     _ijeConfig.get()

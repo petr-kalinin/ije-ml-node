@@ -8,10 +8,7 @@ import logger from '../log'
 
 makeMonitor = (id) ->
     filename = mlConfig.ije_dir + "/" + (await ijeConfig())["results-path"] + (await contestConfig(id)).monitor
-    load = () ->
-        logger.info "Loading ", filename
-        await parseXmlFile(filename)
-    return new LoadableConfig(load)
+    return new LoadableConfig(filename)
 
 monitors = undefined
 

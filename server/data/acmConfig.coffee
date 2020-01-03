@@ -5,29 +5,17 @@ import LoadableConfig from '../lib/LoadableConfig'
 
 import logger from '../log'
 
-load = () ->
-    filename = mlConfig.ije_dir + "/acm.xml"
-    logger.info "Loading ", filename
-    data = await parseXmlFile(filename)
-    for key, value of data
-        if typeof value == 'string'
-            data[key] = data[key].replace(/\\/g, "/")
+_filename = mlConfig.ije_dir + "/acm.xml"
+postLoad = (data) ->
     if not Array.isArray(data["acm-contest"])
         data["acm-contest"] = [data["acm-contest"]]
     return data
 
 makeContestConfig = (c) ->
     filename = mlConfig.ije_dir + "/" + c.settings
-    load = () ->
-        logger.info "Loading ", filename
-        data = await parseXmlFile(filename)
-        for key, value of data
-            if typeof value == 'string'
-                data[key] = data[key].replace(/\\/g, "/")
-        return data
-    return new LoadableConfig(load)
+    return new LoadableConfig(filename)
 
-_acmConfig = new LoadableConfig(load)
+_acmConfig = new LoadableConfig(_filename, postLoad)
 contestConfigs = undefined
 
 acmConfig = () ->
