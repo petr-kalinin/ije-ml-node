@@ -7,7 +7,7 @@ import logger from '../log'
 
 _filename = mlConfig.ije_dir + "/ije_cfg.xml"
 
-_ijeConfig = new LoadableConfig(_filename)
+_ijeConfig = new LoadableConfig(_filename, undefined, -1)
 
 ijeConfig = () ->
     _ijeConfig.get()

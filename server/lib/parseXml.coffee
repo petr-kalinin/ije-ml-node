@@ -56,5 +56,5 @@ export parseXml = (xml) ->
             else
                 resolve correctParsedXml(result)
 
-export default parseXmlFile = (filename) ->
-    return await parseXml(await loadFile(filename))
+export default parseXmlFile = (filename, ignoreCache) ->
+    return await parseXml(await loadFile(filename, undefined, ignoreCache))

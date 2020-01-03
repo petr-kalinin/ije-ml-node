@@ -13,9 +13,9 @@ postLoad = (data) ->
 
 makeContestConfig = (c) ->
     filename = mlConfig.ije_dir + "/" + c.settings
-    return new LoadableConfig(filename)
+    return new LoadableConfig(filename, undefined, -1)
 
-_acmConfig = new LoadableConfig(_filename, postLoad)
+_acmConfig = new LoadableConfig(_filename, postLoad, -1)
 contestConfigs = undefined
 
 acmConfig = () ->
