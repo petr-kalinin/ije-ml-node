@@ -150,7 +150,7 @@ export class AddMessageDetails extends React.Component
         <div>
             {m.canUseToken && <p><UseToken id={m.id}/></p>}
             <p>{qLANG.ScrollToBottom}</p>
-            {m.testres && <table className={styles.dtests} cellSpacing="0"><tbody>
+            {m.testres?.length && <table className={styles.dtests} cellSpacing="0"><tbody>
                 {m.testres.map((t)->
                     res=xmlToOutcome[t.outcome] 
                     <tr className={res} key={t.id}>
@@ -175,7 +175,7 @@ export class AddMessageDetails extends React.Component
             <DataFile text={m.source}/>
             <h3>{qLANG.CompileLog}</h3>
             <DataFile text={m.compileLog}/>
-            {m.testres.map((t)->
+            {m.testres?.map((t)->
                 res=xmlToOutcome[t.outcome] 
                 <div key={t.id}>
                     <h3>{"#{LANG.Test} #{t.id} | "}
