@@ -15,9 +15,10 @@ makeFileData = (problem, filename) ->
     mlcfg = mlConfig
     cfg = await ijeConfig()
     path="#{mlcfg['ije_dir']}/#{cfg['outputs-path']}/#{problem}/#{filename}"
+    problemPath="#{mlcfg['ije_dir']}/#{cfg['problems-path']}#{problem}"
     probCfg = await problemConfig(problem)
     probdata = probCfg.judging.script.testset
-    return {path, probdata}
+    return {path, problemPath, probdata}
 
 loadAndTrimFile = (filename, maxlen) ->
     try
@@ -35,13 +36,13 @@ addSourceAndCompileLog = (result, fileData) ->
     result.compileLog = await loadAndTrimFile("#{path}/compile.log")
 
 addFiles = (test, fileData) ->
-    {path, probdata} = fileData
+    {path, probdata, problemPath} = fileData
     id = test.id
     inf = makeTestFileName(probdata["input-href"], id)
-    test.input = await loadAndTrimFile("#{path}/#{inf}")
+    test.input = await loadAndTrimFile("#{problemPath}/#{inf}")
     test.output = await loadAndTrimFile("#{path}/#{inf}.out")
     ans = makeTestFileName(probdata["answer-href"], id)
-    test.answer = await loadAndTrimFile("#{path}/#{ans}")
+    test.answer = await loadAndTrimFile("#{problemPath}/#{ans}")
 
 formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
     shouldAddFiles = shouldAddFiles
@@ -66,29 +67,32 @@ formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
 
     showTests = not hasTests(s) or (tokenused and cc["showtests"] == "true")
 
-    if showTests
-        nn = 0
-        result["testres"] = []
+    nn = 0
+    result["testres"] = []
+    for id, test of s
+        if not test.id?
+            continue
+        fullInfo = (+test["max-points"] == 0) or (cc["showcomments"] == "true")
+        if not showTests and not fullInfo
+            result.notAllTests = true
+            continue
+        if not fullInfo
+            outcome = xmlToOutcome[test.outcome]
+            test["comment"] = LTEXT[outcome]
+            test["eval-comment"] = undefined
+        if fullInfo and shouldAddFiles
+            await addFiles(test, fileData)
+        nn++
+        result["testres"].push(test)
+    if showTests and hasTests(s)
+        result.tests = 0
+        result.testsCount = 0
         for id, test of s
             if not test.id?
                 continue
-            if cc["showcomments"] != "true"
-                outcome = xmlToOutcome[test.outcome]
-                test["comment"] = LTEXT[outcome]
-                test["eval-comment"] = undefined
-            if cc["showcomments"] == "true" and shouldAddFiles
-                await addFiles(test, fileData)
-            nn++
-            result["testres"].push(test)
-        if (hasTests(s))
-            result.tests = 0
-            result.testsCount = 0
-            for id, test of s
-                if not test.id?
-                    continue
-                if test["outcome"] == "accepted"
-                    result.tests++;
-                result.testsCount++;
+            if test["outcome"] == "accepted"
+                result.tests++;
+            result.testsCount++;
     result
 
 export makeMessages = (cc, m, currentUser) ->

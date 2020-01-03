@@ -1,14 +1,21 @@
 export default class LoadableConfig
-    constructor: (load) ->
+    constructor: (load, interval) ->
+        @reload = @reload.bind this
         @load = load
+        @interval = interval || 10 * 1000
         @config = undefined
         @pending = []
         @initLoad()
 
     initLoad: () ->
-        @config = await @load()
+        await @reload()
         for resolve in @pending
             resolve(@config)
+
+    reload: () ->
+        @config = await @load()
+        if @interval > 0
+            @timeout = setTimeout(@reload, @interval)
 
     get: () ->
         if @config

@@ -98,8 +98,8 @@ export class AddMessage extends React.Component
         comment = ""
         outcome = ""
         if m.testres?.length
-            restext = "OK"
-            outcome = "OK"
+            restext = m.notAllTests && " " || "OK"
+            outcome = m.notAllTests && " " || "OK"
             for t, n in m.testres
                 if not (t.outcome in ["accepted", "accepted-not-counted"])
                     outcome = xmlToOutcome[t.outcome]
@@ -149,8 +149,9 @@ export class AddMessageDetails extends React.Component
         m = @props.message
         <div>
             {m.canUseToken && <p><UseToken id={m.id}/></p>}
+            {m.notAllTests && <p><b>{qLANG.NotAllTests}</b></p>}
             <p>{qLANG.ScrollToBottom}</p>
-            {m.testres?.length && <table className={styles.dtests} cellSpacing="0"><tbody>
+            {m.testres?.length? && <table className={styles.dtests} cellSpacing="0"><tbody>
                 {m.testres.map((t)->
                     res=xmlToOutcome[t.outcome] 
                     <tr className={res} key={t.id}>
