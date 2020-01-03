@@ -13,6 +13,7 @@ import Submit from './components/Submit'
 import Standings from './components/Standings'
 import Messages from './components/Messages'
 import MessageDetails from './components/MessageDetails'
+import Balloons from './components/Balloons'
 
 class NoMatch extends React.Component
     render: () ->
@@ -60,6 +61,11 @@ export default [
         key: "/messageDetails/:id"
         path: "/messageDetails/:id"
         exact: true
+    },
+    {
+        component: Balloons,
+        key: "/balloons"
+        path: "/balloons"
     },
     {
         component: NoMatch,

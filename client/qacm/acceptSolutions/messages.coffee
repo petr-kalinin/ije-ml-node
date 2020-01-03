@@ -6,6 +6,7 @@ import LANG, {LTEXT} from '../../lib/lang'
 import {xmlToOutcome, textColor} from '../../lib/ijeConsts'
 import callApi from '../../lib/callApi'
 import withMe from '../../lib/withMe'
+import Balloon from '../../components/Balloon'
 
 getMyRow = (standings, username) ->
     for row in standings
@@ -60,7 +61,10 @@ export ProbHeader = (props) ->
         {if attempts != 0
             <font className={styles.probinfo}>
                 {if row.full
-                    <font className={styles.ProbFull}>{points}</font>
+                    <span>
+                        <Balloon id={props.prob.id}/>
+                        <font className={styles.ProbFull}>{points}</font>
+                    </span>
                 else
                     points
                 }
