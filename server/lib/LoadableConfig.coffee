@@ -1,4 +1,7 @@
+fs = require('fs')
+
 import parseXmlFile from '../lib/parseXml'
+import sleep from '../lib/sleep'
 import logger from '../log'
 
 load = (filename, ignoreCache) ->
@@ -10,11 +13,11 @@ load = (filename, ignoreCache) ->
     return data
 
 class LoadableConfig
-    constructor: (filename, postLoad, interval) ->
+    constructor: (filename, postLoad) ->
         @reload = @reload.bind this
+        @onFileChanged = @onFileChanged.bind this
         @filename = filename
         @postLoad = postLoad || (x) -> x
-        @interval = interval || 10 * 1000
         @config = undefined
         @pending = []
         @initLoad()
@@ -23,12 +26,16 @@ class LoadableConfig
         await @reload()
         for resolve in @pending
             resolve(@config)
+        fs.watchFile(@filename, {interval: 2000}, @onFileChanged)
+        console.log "Init watch for #{@filename}"
+
+    onFileChanged: (curStat, prevStat) ->
+        if curStat.mtime != prevStat.mtime
+            await sleep(500)
+            await @reload()
 
     reload: () ->
-        @config = await @postLoad(await load(@filename, @interval > 0))
-        if @interval > 0
-            clearTimeout(@timeout)
-            @timeout = setTimeout(@reload, @interval)
+        @config = await @postLoad(await load(@filename, true))
 
     get: () ->
         if @config
@@ -39,7 +46,7 @@ class LoadableConfig
             return promise
 
 _configs = {}
-export default createConfig = (filename, postLoad, interval) ->
+export default createConfig = (filename, postLoad) ->
     if not (filename of _configs)
-        _configs[filename] = new LoadableConfig(filename, postLoad, interval)
+        _configs[filename] = new LoadableConfig(filename, postLoad)
     return _configs[filename]

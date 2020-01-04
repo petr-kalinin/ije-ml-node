@@ -1,7 +1,7 @@
 import mlConfig from '../mlConfig'
 import sleep from '../lib/sleep'
 import parseXmlFile from '../lib/parseXml'
-import LoadableConfig from '../lib/LoadableConfig'
+import createConfig from '../lib/LoadableConfig'
 
 import logger from '../log'
 
@@ -13,9 +13,9 @@ postLoad = (data) ->
 
 makeContestConfig = (c) ->
     filename = mlConfig.ije_dir + "/" + c.settings
-    return new LoadableConfig(filename, undefined, -1)
+    return createConfig(filename, undefined, -1)
 
-_acmConfig = new LoadableConfig(_filename, postLoad, -1)
+_acmConfig = createConfig(_filename, postLoad)
 contestConfigs = undefined
 
 acmConfig = () ->

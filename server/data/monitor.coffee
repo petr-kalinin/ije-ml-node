@@ -2,13 +2,13 @@ import mlConfig from '../mlConfig'
 import ijeConfig from './ijeConfig'
 import acmConfig, {contestConfig} from './acmConfig'
 import parseXmlFile from '../lib/parseXml'
-import LoadableConfig from '../lib/LoadableConfig'
+import createConfig from '../lib/LoadableConfig'
 
 import logger from '../log'
 
 makeMonitor = (id) ->
     filename = mlConfig.ije_dir + "/" + (await ijeConfig())["results-path"] + (await contestConfig(id)).monitor
-    return new LoadableConfig(filename)
+    return createConfig(filename)
 
 monitors = undefined
 
