@@ -75,7 +75,8 @@ formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
         fullInfo = (+test["max-points"] == 0) or (cc["showcomments"] == "true")
         if not showTests and not fullInfo
             result.notAllTests = true
-            continue
+            test.hidden = true
+            # continue
         if not fullInfo
             outcome = xmlToOutcome[test.outcome]
             test["comment"] = LTEXT[outcome]

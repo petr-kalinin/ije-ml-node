@@ -105,6 +105,8 @@ export class AddMessage extends React.Component
             restext = m.notAllTests && " " || "OK"
             outcome = m.notAllTests && " " || "OK"
             for t, n in m.testres
+                if t.hidden
+                    continue
                 if not (t.outcome in ["accepted", "accepted-not-counted"])
                     outcome = xmlToOutcome[t.outcome]
                     restext = LTEXT[outcome]
@@ -157,6 +159,8 @@ export class AddMessageDetails extends React.Component
             <p>{qLANG.ScrollToBottom}</p>
             {m.testres?.length? && <table className={styles.dtests} cellSpacing="0"><tbody>
                 {m.testres.map((t)->
+                    if t.hidden
+                        return null
                     res=xmlToOutcome[t.outcome] 
                     <tr className={res} key={t.id}>
                     <td className={styles.testid}>
@@ -181,6 +185,8 @@ export class AddMessageDetails extends React.Component
             <h3>{qLANG.CompileLog}</h3>
             <DataFile text={m.compileLog}/>
             {m.testres?.map((t)->
+                if t.hidden
+                    return null
                 res=xmlToOutcome[t.outcome] 
                 <div key={t.id}>
                     <h3>{"#{LANG.Test} #{t.id} | "}
