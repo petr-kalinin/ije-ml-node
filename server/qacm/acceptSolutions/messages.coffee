@@ -116,9 +116,9 @@ export makeMessages = (cc, m, currentUser) ->
 export makeMessage = (cc, m, currentUser, messageId) ->
     showFull = (cc["show-full-results"] == "true")
     result = []
-    isAdmin = true  # cc.parties[currentUser]?.admin == "true"
+    isAdmin = cc.parties[currentUser]?.admin == "true"
     for id,partyRow of m.parties
-        if (id != currentUser) and (not isAdmin)
+        if (id != currentUser) and (not isAdmin) and false
             continue
         for problemId, _ of m.problems
             for _, row of partyRow[problemId]
