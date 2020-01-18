@@ -133,7 +133,7 @@ export class AddMessage extends React.Component
 export hasMessageDetails = () -> true
 
 export addMessageDetailsTable = (data, m) ->
-    data[qLANG.Points] = m["points"]
+    data[qLANG.Points] = {text: m["points"], makebold: true}
     if m.tests
         data[qLANG.SuccessfullTests] = m["tests"]
 
