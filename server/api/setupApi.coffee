@@ -31,16 +31,19 @@ api.get '/statements/:id', wrap (req, res) ->
     probId = req.params.id
     if not contest?
         res.status(403).send("No current contest")
+        return
     cc = await contestConfig(contest)
     m = await monitor(contest)
     if m.time < 0
-        res.status(403).send("Contest not started yet")
+        res.status(403).send("Contest not started yet \n")
+        return
     if typeof cc.statements == "string"
         filename = cc.statements
     else
         filename = cc.statements[probId]
     if not filename
         res.status(400).send("No statements")
+        return
     text = await loadFile("#{mlConfig.ije_dir}/#{filename}", "raw")
     mimeType = fileType(Buffer.from(text))?.mime || "text/plain"
     res.status(200).contentType(mimeType).send(text)
