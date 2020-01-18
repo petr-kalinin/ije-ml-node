@@ -47,7 +47,7 @@ addFiles = (test, fileData) ->
 formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
     shouldAddFiles = shouldAddFiles
     result = {}
-    tokenused = s["token-used-time"] >= 0 or +cc["token-period"] < 0 or s[1]["outcome"] == "compilation-error" or cc["show-full-results"]=="true" or isAdmin
+    tokenused = s["token-used-time"] >= 0 or +cc["token-period"] < 0 or s[1]["outcome"] == "compilation-error" or cc["show-full-results"]=="true"
     result.id = s.id
     result.time = s.time
     result.party = s.party

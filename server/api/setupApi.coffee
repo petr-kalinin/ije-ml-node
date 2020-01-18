@@ -84,7 +84,11 @@ api.post '/logout', wrap (req, res) ->
     res.status(200).json({})
 
 api.get '/me', wrap (req, res) ->
-    cc = await contestConfig(req.session.contest)
+    try
+        cc = await contestConfig(req.session.contest)
+    catch
+        req.session.contest = 0
+        cc = await contestConfig(req.session.contest)
     res.status(200).json
         contest: req.session.contest
         username: req.session.username
