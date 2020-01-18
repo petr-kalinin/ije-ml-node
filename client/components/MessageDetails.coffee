@@ -51,6 +51,5 @@ options =
     urls: (props) ->
         message: "message/#{props.me.contest}/#{props.match.params.id}"
         standings: "standings/#{props.me.contest}"
-    timeout: 10000
 
 export default withRouter(withContestData(ConnectedComponent(MessageDetails, options)))

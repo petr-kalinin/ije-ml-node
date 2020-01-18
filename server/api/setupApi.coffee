@@ -207,7 +207,7 @@ api.post '/submit', wrap (req, res) ->
         attempts++
     if not await fs.pathExists(reppath)
         logger.error "No report created"
-        await fs.remove(fpath)
+        #await fs.remove(fpath)
         res.json({error: "no_response"})
         return
     await sleep(500)
