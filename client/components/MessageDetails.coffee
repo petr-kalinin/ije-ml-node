@@ -10,6 +10,12 @@ import ConnectedComponent from '../lib/ConnectedComponent'
 
 import styles from './MessageDetails.css'
 
+BoldIfNeeded = (props) ->
+    if props.makebold
+        <b>{props.children}</b>
+    else
+        props.children
+
 class MessageDetails extends React.Component
     render: () ->
         if not @props.message.id
@@ -30,9 +36,10 @@ class MessageDetails extends React.Component
                 res = []
                 a = (x) -> res.push(x)
                 for key, value of data
+                    console.log key, value, value.makebold
                     a <tr key={key}>
-                        <td className={styles.msgleft}>{LANG[key] || key}:</td>
-                        <td className={styles.msgright}>{value}</td>
+                        <td className={styles.msgleft}><BoldIfNeeded makebold={value.makebold}>{LANG[key] || key}:</BoldIfNeeded></td>
+                        <td className={styles.msgright}><BoldIfNeeded makebold={value.makebold}>{value.text || value}</BoldIfNeeded></td>
                     </tr>
                 res
                 }
@@ -44,6 +51,5 @@ options =
     urls: (props) ->
         message: "message/#{props.me.contest}/#{props.match.params.id}"
         standings: "standings/#{props.me.contest}"
-    timeout: 10000
 
 export default withRouter(withContestData(ConnectedComponent(MessageDetails, options)))
