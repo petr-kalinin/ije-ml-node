@@ -101,7 +101,6 @@ options =
     urls: (props) ->
         messages: "messages/#{props.me.contest}"
         standings: "standings/#{props.me.contest}"
-    timeout: 10000
 
 mapStateToProps = (state) ->
     return

@@ -14,7 +14,7 @@ hasTests = (s) ->
 makeFileData = (problem, filename) ->
     mlcfg = mlConfig
     cfg = await ijeConfig()
-    path="#{mlcfg['ije_dir']}/#{cfg['outputs-path']}/#{problem}/#{filename}"
+    path = "#{problem}/#{filename}"
     problemPath="#{mlcfg['ije_dir']}/#{cfg['problems-path']}#{problem}"
     probCfg = await problemConfig(problem)
     probdata = probCfg.judging.script.testset
@@ -24,30 +24,38 @@ loadAndTrimFile = (filename, maxlen) ->
     try
         text = await loadFile(filename)
     catch e
-        logger.error "Can not find file #{filename}"
         return null
     if text.length > maxlen
         text = text.substr(maxlen) + "\n<...>"
     text
 
+findAndLoadFile = (filename, fileData, maxlen) ->
+    mlcfg = mlConfig
+    for path in mlcfg.outputsDirs
+        data = await loadAndTrimFile("#{path}/#{fileData.path}/#{filename}", maxlen)
+        if data != null
+            return data
+    logger.error "Can not find file #{fileData.path}/#{filename}"
+    return null 
+        
+
 addSourceAndCompileLog = (result, fileData) ->
-    {path, probdata} = fileData
-    result.source = await loadAndTrimFile("#{path}/#{result.filename}.#{result['language-id']}", 1024*1024)
-    result.compileLog = await loadAndTrimFile("#{path}/compile.log")
+    result.source = await findAndLoadFile("#{result.filename}.#{result['language-id']}", fileData, 1024*1024)
+    result.compileLog = await findAndLoadFile("compile.log", fileData)
 
 addFiles = (test, fileData) ->
-    {path, probdata, problemPath} = fileData
+    {probdata, problemPath} = fileData
     id = test.id
     inf = makeTestFileName(probdata["input-href"], id)
     test.input = await loadAndTrimFile("#{problemPath}/#{inf}")
-    test.output = await loadAndTrimFile("#{path}/#{inf}.out")
+    test.output = await findAndLoadFile("#{inf}.out", fileData)
     ans = makeTestFileName(probdata["answer-href"], id)
     test.answer = await loadAndTrimFile("#{problemPath}/#{ans}")
 
 formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
     shouldAddFiles = shouldAddFiles
     result = {}
-    tokenused = s["token-used-time"] >= 0 or +cc["token-period"] < 0 or s[1]["outcome"] == "compilation-error" or cc["show-full-results"]=="true" or isAdmin
+    tokenused = s["token-used-time"] >= 0 or +cc["token-period"] < 0 or s[1]["outcome"] == "compilation-error" or cc["show-full-results"]=="true"
     result.id = s.id
     result.time = s.time
     result.party = s.party

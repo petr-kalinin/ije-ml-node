@@ -14,7 +14,7 @@ export default LANG =
     Comment: "Комментарий"
     Attempt: 'Попытка'
     Token: "Запрос"
-    UseToken: "Запросить результат"
+    UseToken: "Запросить баллы"
     TokenRequestSent: "Запрос послан успешно"
     ReturnToMessages: "Вернуться к сообщениям"
     TokensRemaining: "Осталось запросов:"

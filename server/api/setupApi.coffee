@@ -31,16 +31,19 @@ api.get '/statements/:id', wrap (req, res) ->
     probId = req.params.id
     if not contest?
         res.status(403).send("No current contest")
+        return
     cc = await contestConfig(contest)
     m = await monitor(contest)
     if m.time < 0
-        res.status(403).send("Contest not started yet")
+        res.status(403).send("Contest not started yet \n")
+        return
     if typeof cc.statements == "string"
         filename = cc.statements
     else
         filename = cc.statements[probId]
     if not filename
         res.status(400).send("No statements")
+        return
     text = await loadFile("#{mlConfig.ije_dir}/#{filename}", "raw")
     mimeType = fileType(Buffer.from(text))?.mime || "text/plain"
     res.status(200).contentType(mimeType).send(text)
@@ -84,7 +87,11 @@ api.post '/logout', wrap (req, res) ->
     res.status(200).json({})
 
 api.get '/me', wrap (req, res) ->
-    cc = await contestConfig(req.session.contest)
+    try
+        cc = await contestConfig(req.session.contest)
+    catch
+        req.session.contest = 0
+        cc = await contestConfig(req.session.contest)
     res.status(200).json
         contest: req.session.contest
         username: req.session.username
@@ -200,7 +207,7 @@ api.post '/submit', wrap (req, res) ->
         attempts++
     if not await fs.pathExists(reppath)
         logger.error "No report created"
-        await fs.remove(fpath)
+        #await fs.remove(fpath)
         res.json({error: "no_response"})
         return
     await sleep(500)

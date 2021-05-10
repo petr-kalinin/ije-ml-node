@@ -1,12 +1,12 @@
 module.exports = {
   generateScopedName: function (name, filepath, css) {
-    var baseDir = __dirname.split("/");
+    var baseDir = __dirname.split(/\/|\\/);
     var csspath = filepath
-        .split("/")
+        .split(/\/|\\/)
         .slice(baseDir.length - 1)  // -1 for 'client'
         .join("_")
         .slice(0, -4);
     
-    return "_" + csspath + "__" + name;
+    return "_C_C_" + csspath + "__" + name;
   }
 }

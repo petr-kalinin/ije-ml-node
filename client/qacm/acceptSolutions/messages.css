@@ -26,6 +26,9 @@ td.prob,td.prob_{
 td.points,td.points_{
   width:100px;
 }
+td.points_ {
+  font-weight: bold;
+}
 td.stests,td.stests_{
   width:120px;
 }
