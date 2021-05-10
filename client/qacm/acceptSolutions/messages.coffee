@@ -136,6 +136,8 @@ export addMessageDetailsTable = (data, m) ->
     data[qLANG.Points] = {text: m["points"], makebold: true}
     if m.tests
         data[qLANG.SuccessfullTests] = m["tests"]
+    for showgroup of m.showgroups
+        data[qLANG.Subtask + " " + showgroup] = {text: m.showgroups[showgroup], makebold: true}
 
 DataFile = (props) ->
     text = props.text

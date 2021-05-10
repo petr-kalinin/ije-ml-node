@@ -9,6 +9,7 @@ export default LANG =
     Pl: "м"
 
     Points: "Баллы"
+    Subtask: "Подзадача"
     SuccessfullTests: "Пройдено тестов"
     FirstWA: "Первый непройденный тест"
     Comment: "Комментарий"

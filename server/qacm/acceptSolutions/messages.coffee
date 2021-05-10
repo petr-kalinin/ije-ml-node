@@ -69,17 +69,24 @@ formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
     result["filename"] = s["filename"]
     result["language-id"] = s["language-id"]
 
+    fileData = await makeFileData(s.problem, s.filename)
     if shouldAddFiles
-        fileData = await makeFileData(s.problem, s.filename)
         await addSourceAndCompileLog(result, fileData)
 
     showTests = not hasTests(s) or (tokenused and cc["showtests"] == "true")
 
     nn = 0
     result["testres"] = []
+    result.showgroups = {}
     for id, test of s
         if not test.id?
             continue
+        if tokenused
+            showgroup = fileData.probdata.test[test.id - 1]["show-group"]
+            if showgroup
+                if not (showgroup of result.showgroups)
+                    result.showgroups[showgroup] = 0
+                result.showgroups[showgroup] += +test.points
         fullInfo = (+test["max-points"] == 0) or (cc["showcomments"] == "true")
         if not showTests and not fullInfo
             result.notAllTests = true
