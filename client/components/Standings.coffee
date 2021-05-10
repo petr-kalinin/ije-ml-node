@@ -42,7 +42,7 @@ class Standings extends React.Component
             </tr>
 
             {
-            @props.standings.map((p) =>
+            @props.standings?.map?((p) =>
                 <tr className={if p.id == @props.me.username then styles.my else qacm.TeamClass(p)} key={p.id}>
                     <td className={styles.Id}>{p.id}</td>
                     <td className={styles.Party}>{p.name}</td>
