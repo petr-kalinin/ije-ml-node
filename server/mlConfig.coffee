@@ -1,4 +1,4 @@
 export default mlConfig = 
-    ije_dir: "../ije"
+    ije_dir: "./ije/ije"
     dst: -3
-    outputsDirs: ["p:/", "../ije/outputs"]
+    outputsDirs: ["./ije/ije/outputs"]
