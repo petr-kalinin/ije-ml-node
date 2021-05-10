@@ -6,6 +6,7 @@ express = require('express')
 compression = require('compression')
 session = require('express-session')
 MongoStore = require('connect-mongo')(session)
+basicAuth = require('express-basic-auth')
 import bodyParser from "body-parser"
 
 import logger from './log'
@@ -33,6 +34,10 @@ if process.env["FORCE_HTTPS"]
     app.use(requireHTTPS)
 
 app.use(compression())
+
+app.use basicAuth
+    users: { 'nnoi': 'oengidgh' }
+    challenge: true
 
 app.use(express.static('build/assets'))
 
