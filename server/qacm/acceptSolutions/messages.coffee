@@ -52,7 +52,7 @@ addFiles = (test, fileData) ->
     ans = makeTestFileName(probdata["answer-href"], id)
     test.answer = await loadAndTrimFile("#{problemPath}/#{ans}")
 
-formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
+formMessage = (cc, m, problemRow, s, isAdmin, currentUser, shouldAddFiles) ->
     shouldAddFiles = shouldAddFiles
     result = {}
     tokenused = s["token-used-time"] >= 0 or +cc["token-period"] < 0 or s[1]["outcome"] == "compilation-error" or cc["show-full-results"]=="true"
@@ -61,6 +61,8 @@ formMessage = (cc, m, problemRow, s, isAdmin, shouldAddFiles) ->
     result.party = s.party
     result.tokenUsed = tokenused
     result.canUseToken = not tokenused and +(problemRow["token-wait-time"]) == 0 and hasTests(s)
+    if isAdmin and (s.party != currentUser)
+        result.canUseToken = false
     result.points = if tokenused then s.points else "?"
     result.full = result.points == s["max-points"]
     if s[1]["outcome"] == "not-tested"
@@ -121,7 +123,7 @@ export makeMessages = (cc, m, currentUser) ->
             for _, row of partyRow[problemId]
                 if not (row.id?) 
                     continue
-                result.push formMessage(cc, m, partyRow[problemId], row, isAdmin)
+                result.push formMessage(cc, m, partyRow[problemId], row, isAdmin, currentUser)
 
     result = await awaitAll result
     result.sort (a, b) -> +a.id - b.id
@@ -137,6 +139,6 @@ export makeMessage = (cc, m, currentUser, messageId) ->
         for problemId, _ of m.problems
             for _, row of partyRow[problemId]
                 if +row.id == messageId
-                    return await formMessage(cc, m, partyRow[problemId], row, isAdmin, true)
+                    return await formMessage(cc, m, partyRow[problemId], row, isAdmin, currentUser, true)
     return {}
 
