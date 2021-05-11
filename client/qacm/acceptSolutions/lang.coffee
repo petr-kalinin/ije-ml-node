@@ -16,7 +16,7 @@ export default LANG =
     Attempt: 'Попытка'
     Token: "Запрос"
     UseToken: "Запросить баллы"
-    TokenRequestSent: "Запрос послан успешно"
+    TokenRequestSent: "Запрос послан успешно, обновите страницу"
     ReturnToMessages: "Вернуться к сообщениям"
     TokensRemaining: "Осталось запросов:"
     Wait: "Ждать"
