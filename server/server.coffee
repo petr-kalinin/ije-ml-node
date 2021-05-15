@@ -36,7 +36,7 @@ if process.env["FORCE_HTTPS"]
 app.use(compression())
 
 #app.use basicAuth
-#    users: { 'nnoi': 'oengidgh' }
+#    users: { 'nnoi': 'aemeiY0e' }
 #    challenge: true
 
 app.use(express.static('build/assets'))

@@ -43,11 +43,11 @@ export default renderOnServer = (req, res, next) =>
     try
         initialState = 
             data: [
-                {data: await callApiWithBody('me', 'GET', {"Cookie": req.headers.cookie, "Authorization": "Basic bm5vaTpBZWxvaHNpMQ=="})
+                {data: await callApiWithBody('me', 'GET', {"Cookie": req.headers.cookie, "Authorization": "Basic bm5vaTphZW1laVkwZQ=="})
                 success: true
                 updateTime: new Date()
                 url: "me"}
-                {data: await callApiWithBody("contestData/#{req.session.contest}", 'GET', {"Cookie": req.headers.cookie, "Authorization": "Basic bm5vaTpBZWxvaHNpMQ=="})
+                {data: await callApiWithBody("contestData/#{req.session.contest}", 'GET', {"Cookie": req.headers.cookie, "Authorization": "Basic bm5vaTphZW1laVkwZQ=="})
                 success: true
                 updateTime: new Date()
                 url: "contestData/#{req.session.contest}"}
